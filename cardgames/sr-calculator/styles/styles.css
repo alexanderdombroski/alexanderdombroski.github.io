@@ -1,0 +1,49 @@
+body {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    min-width: 700px; /* Change this later? */
+}
+
+.raw-data-div {
+    display: flex;
+    width: 100%;
+}
+
+.raw-data {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.card-list-div {
+    margin: 0 4px;
+}
+
+.card-list-div > * {
+    margin: 0;
+    border-width: 1px 2px;
+    border-color: black;
+    border-style: solid;
+    height: 22px;
+    width: 130px;
+    padding: 0 2px;
+}
+
+.table-spacer {
+    font-weight: bold;
+    border-top-width: 2px;
+}
+
+.card-dropdown {
+    display: block;
+    border-radius: 0;
+}
+
+td, th {
+    height: 20px;
+    border: 2px solid black;
+}
+
+td {
+    color: lightgray;
+}

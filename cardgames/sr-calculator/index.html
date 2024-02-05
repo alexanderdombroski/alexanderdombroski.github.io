@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Interface</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script type="module" src="scripts/main.js" defer></script>
+    <script type="module" src="scripts/filter.js" defer></script>
+    <script type="module" src="scripts/update-row.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Instructions</a>
+            <a href="#">About</a>
+            <a href="wireframe.html">Wireframe</a>
+        </nav>
+    </header>
+    <main>
+        <div class="graphs-div"></div>
+        <div class="data-calculations-div"></div>
+        <div class="graphs-div"></div>
+        
+        <div class="filters-div">
+            <label for="faction_filter">Select a Faction:</label>
+            <select id="faction_filter">
+                <option value="Unaligned">Unaligned</option>
+                <option value="Machine Cult">Machine Cult</option>
+                <option value="Star Empire">Star Empire</option>
+                <option value="Blob">Blob</option>
+                <option value="Trade Federation">Trade Federation</option>
+            </select>
+        </div>
+
+        <div class="modifiers-div"></div>
+        <div class="quick-edit-div"></div>
+        <div class="raw-data-div">
+            <div class="card-list-div">
+                <p class="table-spacer">Cards</p> 
+                <input list="filtered-card-list" class="card-dropdown r1" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r2" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r3" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r4" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r5" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r6" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r7" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r8" value="Scout">
+                <input list="filtered-card-list" class="card-dropdown r9" value="Viper">
+                <input list="filtered-card-list" class="card-dropdown r10" value="Viper">
+                <input list="filtered-card-list" class="card-dropdown r11">
+                <input list="filtered-card-list" class="card-dropdown r12">
+                <input list="filtered-card-list" class="card-dropdown r13">
+                <input list="filtered-card-list" class="card-dropdown r14">
+                <input list="filtered-card-list" class="card-dropdown r15">
+                <input list="filtered-card-list" class="card-dropdown r16">
+                <input list="filtered-card-list" class="card-dropdown r17">
+                <input list="filtered-card-list" class="card-dropdown r18">
+                <input list="filtered-card-list" class="card-dropdown r19">
+                <input list="filtered-card-list" class="card-dropdown r20">
+                <input list="filtered-card-list" class="card-dropdown r21">
+                <input list="filtered-card-list" class="card-dropdown r22">
+                <input list="filtered-card-list" class="card-dropdown r23">
+                <input list="filtered-card-list" class="card-dropdown r24">
+                <input list="filtered-card-list" class="card-dropdown r25">
+                <input list="filtered-card-list" class="card-dropdown r26">
+                <input list="filtered-card-list" class="card-dropdown r27">
+                <input list="filtered-card-list" class="card-dropdown r28">
+                <input list="filtered-card-list" class="card-dropdown r29">
+                <input list="filtered-card-list" class="card-dropdown r30">
+            </div>
+            <table class="raw-data">
+                <thead>
+                    <tr class="r0">
+                        <th>Faction</th>
+                        <th>Cost</th>
+                        <th>Trade</th>
+                        <th>Combat</th>
+                        <th>Authority</th>
+                        <th>Discard</th>
+                        <th>Scrap</th>
+                        <th>T-Scrap</th>
+                        <th>Draw</th>
+                        <th>Defence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="r1">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r2">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r3">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r4">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r5">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r6">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r7">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r8">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r9">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r10">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r11">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r12">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r13">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r14">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r15">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r16">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r17">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r18">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r19">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r20">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r21">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r22">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r23">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r24">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r25">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r26">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r27">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r28">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r29">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr class="r30">
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h1 class="heading"></h1>
+        <h2 class="heading"></h2>
+        <h1></h1>
+        <h2></h2>
+
+        <datalist id="filtered-card-list">
+            <option value="Scout">
+            <option value="Viper">
+            <option value="Explorer">
+        </datalist>
+
+    </main>
+</body>
+</html>
