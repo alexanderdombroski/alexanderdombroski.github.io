@@ -1,0 +1,138 @@
+card_id,name,deck_id,faction_id,cost,defence
+1,scout,1,11,0,0
+2,viper,1,11,0,0
+3,explorer,1,11,2,0
+4,federation shuttle,1,1,1,0
+5,cutter,1,1,2,0
+6,embassy yacht,1,1,3,0
+7,trading post,1,1,3,4
+8,freighter,1,1,4,0
+9,barter world,1,1,4,4
+10,trade escort,1,1,5,0
+11,defense center,1,1,5,5
+12,flagship,1,1,6,0
+13,port of call,1,1,6,6
+14,central office,1,1,7,6
+15,command ship,1,1,8,0
+16,blob fighter,1,2,1,0
+17,battle pod,1,2,2,0
+18,trade pod,1,2,2,0
+19,ram,1,2,3,0
+20,blob wheel,1,2,3,5
+21,blob destroyer,1,2,4,0
+22,the hive,1,2,5,5
+23,battle blob,1,2,6,0
+24,blob carrier,1,2,6,0
+25,mothership,1,2,7,0
+26,blob world,1,2,8,7
+27,trade bot,1,4,1,0
+28,missile bot,1,4,2,0
+29,supply bot,1,4,3,0
+30,battle station,1,4,3,5
+31,patrol mech,1,4,4,0
+32,stealth needle,1,12,4,0
+33,battle mech,1,4,5,0
+34,mech world,1,12,5,6
+35,missile mech,1,4,6,0
+36,junkyard,1,4,6,5
+37,machine base,1,4,7,6
+38,brain world,1,4,8,6
+39,imperial fighter,1,3,1,0
+40,corvette,1,3,2,0
+41,imperial frigate,1,3,3,0
+42,survey ship,1,3,3,0
+43,space station,1,3,4,4
+44,recycling station,1,3,4,4
+45,war world,1,3,5,4
+46,battlecruiser,1,3,6,0
+47,royal redoubt,1,3,6,6
+48,dreadnaught,1,3,7,0
+49,fleet hq,1,3,8,8
+50,solar skiff,2,1,1,0
+51,trade hauler,2,1,2,0
+52,storage silo,2,1,2,3
+53,patrol cutter,2,1,3,0
+54,frontier ferry,2,1,4,0
+55,central station,2,1,4,5
+56,colony seed ship,2,1,5,0
+57,peace keeper,2,1,6,0
+58,federation shipyard,2,1,6,6
+59,loyal colony,2,1,7,6
+60,factory world,2,1,8,6
+61,battle bot,2,4,1,0
+62,repair bot,2,4,2,0
+63,warning beacon,2,4,2,2
+64,convoy bot,2,4,3,0
+65,mining mech,2,4,4,0
+66,the oracle,2,4,4,5
+67,mech cruiser,2,4,5,0
+68,stealth tower,2,12,5,5
+69,frontier station,2,4,6,6
+70,the wrecker,2,4,7,0
+71,the incinerator,2,4,8,6
+72,swarmer,2,2,1,0
+73,predator,2,2,2,0
+74,stellar reef,2,2,2,3
+75,cargo pod,2,2,3,0
+76,ravager,2,2,3,0
+77,bioformer,2,2,4,4
+78,parasite,2,2,5,0
+79,plasma vent,2,2,6,5
+80,moonwurm,2,2,7,0
+81,leviathan,2,2,8,0
+82,star barge,2,3,1,0
+83,lancer,2,3,2,0
+84,falcon,2,3,3,0
+85,orbital platform,2,3,3,4
+86,gunship,2,3,4,0
+87,command center,2,3,4,4
+88,aging battleship,2,3,1,0
+89,heavy cruiser,2,3,1,0
+90,supply depot,2,3,6,5
+91,imperial palace,2,3,7,6
+92,emperor's dreadnaught,2,3,8,0
+93,frontier runner,3,1,1,0
+94,orbital shuttle,3,1,2,0
+95,patrol boat,3,1,3,0
+96,outland station,3,1,3,4
+97,long hauler,3,1,4,0
+98,mobile market,3,1,4,4
+99,federation cruiser,3,1,5,0
+100,ion station,3,1,5,5
+101,gateship,3,1,6,0
+102,federation battleship,3,1,7,0
+103,transit nexus,3,1,8,6
+104,builder bot,3,4,1,0
+105,plasma bot,3,4,2,0
+106,destroyer bot,3,4,3,0
+107,integration port,3,4,3,5
+108,repair mech,3,4,4,0
+109,defense system,3,4,4,5
+110,enforcer mech,3,4,5,0
+111,conversion yard,3,4,5,4
+112,reclamation station,3,4,6,6
+113,neural nexus,3,4,7,6
+114,nanobot swarm,3,4,8,0
+115,stinger,3,2,1,0
+116,blob miner,3,2,2,0
+117,spike cluster,3,2,2,3
+118,crusher,3,2,3,0
+119,burrower,3,2,3,0
+120,moonwurm hatchling,3,2,4,0
+121,nesting ground,3,2,4,5
+122,pulverizer,3,2,5,0
+123,blob alpha,3,2,6,0
+124,infested moon,3,2,6,5
+125,hive queen,3,2,7,0
+126,swarm cluster,3,2,8,8
+127,frontier hawk,3,3,1,0
+128,cargo craft,3,3,2,0
+129,light cruiser,3,3,3,0
+130,captured outpost,3,3,3,3
+131,farm ship,3,3,4,0
+132,orbital gun platform,3,3,4,4
+133,hammerhead,3,3,5,0
+134,jamming terminal,3,3,5,6
+135,warpgate cruiser,3,3,6,0
+136,siege fortress,3,3,7,5
+137,imperial flagship,3,3,8,0
