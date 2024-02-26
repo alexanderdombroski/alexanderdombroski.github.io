@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Interface</title>
     <link rel="stylesheet" href="styles/styles.css">
-    <script type="module" src="scripts/main.js" defer></script>
+    <!-- <script type="module" src="scripts/main.js" defer></script> -->
     <script type="module" src="scripts/filter.js" defer></script>
-    <script type="module" src="scripts/update-row.js" defer></script>
+    <!-- <script type="module" src="scripts/update-row.js" defer></script> -->
+    <script type="module" src="scripts/init-card-datalist.js" defer></script>
 </head>
 <body>
     <header>
@@ -24,13 +25,21 @@
         <div class="graphs-div"></div>
         
         <div class="filters-div">
+            <label for="deck_filter">Select a Deck:</label>
+            <select id="deck_filter">
+                <option value=0>None</option>
+                <option value=1>Core Set</option>
+                <option value=2>Colony Wars</option>
+                <option value=3>Frontiers</option>
+            </select>
             <label for="faction_filter">Select a Faction:</label>
             <select id="faction_filter">
-                <option value="Unaligned">Unaligned</option>
-                <option value="Machine Cult">Machine Cult</option>
-                <option value="Star Empire">Star Empire</option>
-                <option value="Blob">Blob</option>
-                <option value="Trade Federation">Trade Federation</option>
+                <option value=0>None</option>
+                <option value=11>Unaligned</option>
+                <option value=1>Trade Federation</option>
+                <option value=2>Star Empire</option>
+                <option value=3>Blob</option>
+                <option value=4>Machine Cult</option>
             </select>
         </div>
 
@@ -456,9 +465,10 @@
         <h2></h2>
 
         <datalist id="filtered-card-list">
-            <option value="Scout">
-            <option value="Viper">
-            <option value="Explorer">
+
+        </datalist>
+        <datalist id="removed-card-list">
+            
         </datalist>
 
     </main>

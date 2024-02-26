@@ -1,90 +1,40 @@
 var factionFilter = document.getElementById("faction_filter");
 factionFilter.addEventListener("change", applyFilter);
+var cardFilter = document.getElementById("deck_filter");
+cardFilter.addEventListener("change", applyFilter);
 
-function getOptionsForFaction(keyValue) {
-    let cards;
-    if (keyValue == "Blob") {
-        cards = [
-            'Blob Fighter',
-            'Battle Pod',
-            'Trade Pod',
-            'Ram',
-            'Blob Wheel',
-            'Blob Destroyer',
-            'The Hive',
-            'Battle Blob',
-            'Blob Carrier',
-            'Mothership',
-            'Blob World'
-        ];
-    } else if (keyValue == "Trade Federation") {
-        cards = [
-            'Federation Shuttle',
-            'Cutter',
-            'Embassy Yacht',
-            'Trading Post',
-            'Freighter',
-            'Barter World',
-            'Trade Escort',
-            'Defense Center',
-            'Flagship',
-            'Port of Call',
-            'Central Office',
-            'Command Ship'
-        ];
-    } else if (keyValue == "Star Empire") {
-        cards = [
-            'Imperial Fighter',
-            'Corvette',
-            'Imperial Frigate',
-            'Survey Ship',
-            'Space Station',
-            'Recycling Station',
-            'War World',
-            'Battlecruiser',
-            'Royal Redoubt',
-            'Dreadnaught',
-            'Fleet HQ'
-        ];
-    } else if (keyValue == "Trade Federation") {
-        cards = [
-            'Trade Bot',
-            'Missile Bot',
-            'Supply Bot',
-            'Battle Station',
-            'Patrol Mech',
-            'Stealth Needle',
-            'Battle Mech',
-            'Mech World',
-            'Missile Mech',
-            'Junkyard',
-            'Machine Base',
-            'Brain World'
-        ];
-    } else {
-        cards = ['Scout', 'Viper', 'Explorer'];
-    }
-    return cards
-}
-
-function updateDatalistOptions(cardList) {
-    var shipDataList = document.getElementById("filtered-card-list")
-    shipDataList.innerHTML = ''
-    for (var card of cardList) {
-        let option = document.createElement('option');
-        option.value = card;
-        shipDataList.appendChild(option);
-    }
+function transferDatalistOptions(beginList, destList) {
+    // Moves all options from the datalist associated with beginList to the datalist associated with destList
+    const options = beginList.querySelectorAll('option');
+    options.forEach(option => {
+        destList.appendChild(option);
+    });
 }
 
 function applyFilter() {
-    // Get the selected faction from the dropdown
+    // Get the selected deck and faction from the dropdown
     var factionFilter = document.getElementById("faction_filter");
-    var selectedFaction = factionFilter.value;
+    const selectedFaction = parseInt(factionFilter.value);
+    var deckFilter = document.getElementById("deck_filter");
+    const selectedDeck = parseInt(deckFilter.value);
 
-    // Log the selected faction (you can use it as needed)
-    console.log("Selected Faction:", selectedFaction);
+    var shipDataList = document.getElementById("filtered-card-list");
+    var removedDataList = document.getElementById("removed-card-list");
+
+    // Transfer the all cards to the shipDataList
+    transferDatalistOptions(removedDataList, shipDataList);
 
     // Update datalist options based on the selected faction
-    updateDatalistOptions(getOptionsForFaction(selectedFaction));
+    if (selectedFaction || selectedDeck) {
+        const cards = shipDataList.querySelectorAll('option');
+        cards.forEach(card => {
+            const cardFaction = parseInt(card.getAttribute("faction"));
+            const cardDeck = parseInt(card.getAttribute("deck"));
+            if (selectedFaction !== cardFaction && selectedFaction) {
+                removedDataList.appendChild(card);
+            } else if (selectedDeck !== cardDeck && selectedDeck) {
+                removedDataList.appendChild(card);
+            }
+        });
+    }
 }
