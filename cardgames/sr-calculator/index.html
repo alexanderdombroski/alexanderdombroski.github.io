@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/styles.css">
     <!-- <script type="module" src="scripts/main.js" defer></script> -->
     <script type="module" src="scripts/filter.js" defer></script>
-    <!-- <script type="module" src="scripts/update-row.js" defer></script> -->
+    <script type="module" src="scripts/update-row.js" defer></script>
     <script type="module" src="scripts/init-card-datalist.js" defer></script>
 </head>
 <body>
@@ -27,19 +27,19 @@
         <div class="filters-div">
             <label for="deck_filter">Select a Deck:</label>
             <select id="deck_filter">
-                <option value=0>None</option>
-                <option value=1>Core Set</option>
-                <option value=2>Colony Wars</option>
-                <option value=3>Frontiers</option>
+                <option value="0">None</option>
+                <option value="1">Core Set</option>
+                <option value="2">Colony Wars</option>
+                <option value="3">Frontiers</option>
             </select>
             <label for="faction_filter">Select a Faction:</label>
             <select id="faction_filter">
-                <option value=0>None</option>
-                <option value=11>Unaligned</option>
-                <option value=1>Trade Federation</option>
-                <option value=2>Star Empire</option>
-                <option value=3>Blob</option>
-                <option value=4>Machine Cult</option>
+                <option value="0">None</option>
+                <option value="11">Unaligned</option>
+                <option value="1">Trade Federation</option>
+                <option value="2">Star Empire</option>
+                <option value="3">Blob</option>
+                <option value="4">Machine Cult</option>
             </select>
         </div>
 
@@ -48,36 +48,36 @@
         <div class="raw-data-div">
             <div class="card-list-div">
                 <p class="table-spacer">Cards</p> 
-                <input list="filtered-card-list" class="card-dropdown r1" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r2" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r3" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r4" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r5" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r6" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r7" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r8" value="Scout">
-                <input list="filtered-card-list" class="card-dropdown r9" value="Viper">
-                <input list="filtered-card-list" class="card-dropdown r10" value="Viper">
-                <input list="filtered-card-list" class="card-dropdown r11">
-                <input list="filtered-card-list" class="card-dropdown r12">
-                <input list="filtered-card-list" class="card-dropdown r13">
-                <input list="filtered-card-list" class="card-dropdown r14">
-                <input list="filtered-card-list" class="card-dropdown r15">
-                <input list="filtered-card-list" class="card-dropdown r16">
-                <input list="filtered-card-list" class="card-dropdown r17">
-                <input list="filtered-card-list" class="card-dropdown r18">
-                <input list="filtered-card-list" class="card-dropdown r19">
-                <input list="filtered-card-list" class="card-dropdown r20">
-                <input list="filtered-card-list" class="card-dropdown r21">
-                <input list="filtered-card-list" class="card-dropdown r22">
-                <input list="filtered-card-list" class="card-dropdown r23">
-                <input list="filtered-card-list" class="card-dropdown r24">
-                <input list="filtered-card-list" class="card-dropdown r25">
-                <input list="filtered-card-list" class="card-dropdown r26">
-                <input list="filtered-card-list" class="card-dropdown r27">
-                <input list="filtered-card-list" class="card-dropdown r28">
-                <input list="filtered-card-list" class="card-dropdown r29">
-                <input list="filtered-card-list" class="card-dropdown r30">
+                <input list="filtered-card-list" class="card-dropdown r1" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r2" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r3" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r4" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r5" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r6" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r7" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r8" value="scout" card-id="1" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r9" value="viper" card-id="2" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r10" value="viper" card-id="2" deck="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r11" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r12" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r13" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r14" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r15" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r16" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r17" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r18" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r19" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r20" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r21" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r22" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r23" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r24" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r25" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r26" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r27" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r28" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r29" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r30" card-id="" deck="" faction="">
             </div>
             <table class="raw-data">
                 <thead>
