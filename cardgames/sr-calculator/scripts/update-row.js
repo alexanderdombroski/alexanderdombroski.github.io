@@ -1,8 +1,25 @@
+// Get JSON data
+let jsonData
+(async function getJsonData() {
+     try {
+        const response = await fetch("https://alexanderdombroski.github.io/personal/cardgames/sr-calculator/data/abilities.json");
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        jsonData = await response.json();
+     } catch (error) {
+        console.error('Error fetching data:', error);
+     }
+})();
+
+
 // Add event listeners
-const cardSelectors = document.getElementsByClassName("card-dropdown");
-for (let i=0; i < cardSelectors.length; i++) {
-    cardSelectors[i].addEventListener('change', handleCardChange);
-};
+(function cardInputsListenerSetup() {
+    const cardSelectors = document.getElementsByClassName("card-dropdown");
+    for (let i=0; i < cardSelectors.length; i++) {
+        cardSelectors[i].addEventListener('change', handleCardChange);
+    }
+})();
 
 function getColor(id) {
     switch (id) {
@@ -38,7 +55,7 @@ function getFaction(id) {
         case "12": // All factions
             return "multi" // red-orange
         default:
-            console.log("error in color selection id=", id)
+            console.log("error in faction selection id=", id)
             return "IDK"
     }
 }
@@ -53,6 +70,7 @@ function transferDataFromDatalist(target, targetValue, cells) {
         const options = datalist.querySelectorAll('option')
         options.forEach(option => {
             if (option.value === targetValue) {
+                target.setAttribute("card-id", option.getAttribute("card-id"));
                 target.setAttribute("faction", option.getAttribute("faction"));
                 cells[0].innerHTML = getFaction(option.getAttribute("faction"));
                 cells[1].innerHTML = option.getAttribute("cost");
@@ -69,14 +87,32 @@ function transferDataFromDatalist(target, targetValue, cells) {
     }
 }
 
+function insertAbilities(cardId, cells) {
+    // reset abilities
+    cells.forEach(cell => {
+        cell.innerHTML = 0
+    })
+
+    // get card data
+    const cardAbilites = jsonData[cardId];
+    // console.log(cardAbilites);
+    
+    // Update card data
+    // cardAbilites[]
+}
+
 function handleCardChange(event) {
     // Access the selected value using event.target.value
     const selectedValue = event.target.value;
     const rowNumber = event.target.className.split(' ')[1];
     const cells = document.querySelectorAll(`.${rowNumber} td`);
     
-    // Verify user input and delete if 
+    // Verify user input, delete if nonexisting card
     transferDataFromDatalist(event.target, selectedValue, cells);
+
+    // Finish adding card data
+    const cardId = event.target.getAttribute("card-id");
+    insertAbilities(cardId, [...cells].slice(3, 10));
 
     // Change color
     const factionId = event.target.getAttribute("faction");
@@ -84,8 +120,6 @@ function handleCardChange(event) {
     event.target.style.color = color;
     cells.forEach(cell => {
         cell.style.color = color;
-    });
-
-    
+    });    
 };
 

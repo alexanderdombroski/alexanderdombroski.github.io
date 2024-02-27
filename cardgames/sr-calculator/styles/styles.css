@@ -27,7 +27,7 @@ body {
     height: 22px;
     width: 130px;
     padding: 0 2px;
-    background-color: #F5F5F5;
+    /* background-color: #F5F5F5; */
 }
 
 .table-spacer {
@@ -43,6 +43,7 @@ body {
 td, th {
     height: 20px;
     border: 2px solid black;
+    /* background-color: #F5F5F5; */
 }
 
 td {
