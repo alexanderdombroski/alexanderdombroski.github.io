@@ -127,6 +127,23 @@ function changeFactionStats() {
         )`;
 }
 
+function changeProcessedStats() {
+    // Change deck size counter
+    const cardInputs = document.querySelectorAll(".card-dropdown");
+    let cardCount = 0;
+    cardInputs.forEach(card => {
+        const cardId = card.getAttribute('card-id');
+        if (cardId != "") {
+            cardCount += 1;
+        }
+    });
+    const deckSizeCounter = document.getElementById('deck-size');
+    deckSizeCounter.innerHTML = cardCount;
+
+    
+    
+}
+
 function transferDataFromDatalist(target, targetValue, cells) {
     // Check if the ship is in either datalist, if so, transfer the data attributes of the selected option
     const shipDataList = document.getElementById("filtered-card-list");
@@ -193,6 +210,6 @@ function handleCardChange(event) {
     const cardId = event.target.getAttribute("card-id");
     insertAbilities(cardId, [...cells].slice(2, 9));
 
-
+    changeProcessedStats()
 };
 
