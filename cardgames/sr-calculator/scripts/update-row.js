@@ -139,7 +139,7 @@ function changeProcessedStats() {
     });
     const deckSizeCounter = document.getElementById('deck-size');
     deckSizeCounter.innerHTML = cardCount;
-
+    
     
     
 }
