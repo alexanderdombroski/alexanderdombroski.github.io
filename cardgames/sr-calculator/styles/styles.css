@@ -106,18 +106,32 @@ body {
     opacity: 1;
 }
 
-/* --------------- Filters --------------- */
+/* --------------- Options --------------- */
 
-.filters-div {
-    margin: 5px auto;
+.options-div {
+    display: flex;
+    align-items: center;
 }
 
-.filters-div > label {
+.filters-div, .modifiers-div {
+    margin: 5px;
+    padding: 3px;
+    border: 2px outset;
+    background-color: lightgray;
+}
+
+.options-div label {
     font-size: 16px;
 }
 
-.filters-div > select {
+.options-div select {
+    background-color: lightgray;
+    border: 1px solid lightgray;
     font-size: 14px;
+}
+
+.options-div select:hover {
+    border: 1px black solid;
 }
 
 /* --------------- Raw Data --------------- */
