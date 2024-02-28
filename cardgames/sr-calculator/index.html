@@ -20,10 +20,72 @@
         </nav>
     </header>
     <main>
-        <div class="graphs-div"></div>
-        <div class="data-calculations-div"></div>
-        <div class="graphs-div"></div>
-        
+        <div class="processed-data-div">
+            <div class="graphs-div">
+                <h3>Factions</h3>
+                <div class="pie-chart">
+                    <div class="donut-hole"></div>
+                </div>
+                <div id="faction-counters">
+                    <p class="none-counter">10</p>
+                    <p class="trade-counter">0</p>
+                    <p class="blob-counter">0</p>
+                    <p class="star-counter">0</p>
+                    <p class="mech-counter">0</p>
+                </div> 
+            </div>
+            <div class="data-calculations-div">
+                <div class="data-block">
+                    <h3>Deck Size</h3>
+                    <h2 id="deck-size">10</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Cycling</h3>
+                    <h2 id="cycling">2</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Hand Value</h3>
+                    <h2 id="hand-value">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Deck Value</h3>
+                    <h2 id="deck-value">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Trade</h3>
+                    <h2 id="trade">4</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Combat</h3>
+                    <h2 id="combat">1</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Authority</h3>
+                    <h2 id="authority">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Scrap</h3>
+                    <h2 id="scrap">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>T-Scrap</h3>
+                    <h2 id="t-scrap">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Cards Drawn</h3>
+                    <h2 id="cards-drawn">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Bases</h3>
+                    <h2 id="scrap">0</h2>
+                </div>
+                <div class="data-block">
+                    <h3>Defence</h3>
+                    <h2 id="defence">0</h2>
+                </div>
+            </div>
+            <div class="graphs-div"></div>
+        </div>
         <div class="filters-div">
             <label for="deck_filter">Select a Deck:</label>
             <select id="deck_filter">
@@ -48,36 +110,36 @@
         <div class="raw-data-div">
             <div class="card-list-div">
                 <p class="table-spacer">Cards</p> 
-                <input list="filtered-card-list" class="card-dropdown r1" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r2" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r3" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r4" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r5" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r6" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r7" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r8" value="scout" card-id="1" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r9" value="viper" card-id="2" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r10" value="viper" card-id="2" deck="1" faction="11">
-                <input list="filtered-card-list" class="card-dropdown r11" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r12" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r13" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r14" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r15" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r16" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r17" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r18" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r19" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r20" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r21" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r22" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r23" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r24" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r25" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r26" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r27" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r28" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r29" card-id="" deck="" faction="">
-                <input list="filtered-card-list" class="card-dropdown r30" card-id="" deck="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r1" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r2" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r3" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r4" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r5" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r6" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r7" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r8" value="scout" card-id="1" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r9" value="viper" card-id="2" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r10" value="viper" card-id="2" faction="11">
+                <input list="filtered-card-list" class="card-dropdown r11" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r12" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r13" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r14" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r15" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r16" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r17" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r18" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r19" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r20" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r21" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r22" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r23" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r24" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r25" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r26" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r27" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r28" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r29" card-id="" faction="">
+                <input list="filtered-card-list" class="card-dropdown r30" card-id="" faction="">
             </div>
             <table class="raw-data">
                 <thead>
@@ -96,9 +158,9 @@
                 </thead>
                 <tbody>
                     <tr class="r1">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -108,9 +170,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r2">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -120,9 +182,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r3">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -132,9 +194,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r4">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -144,9 +206,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r5">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -156,9 +218,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r6">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -168,9 +230,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r7">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -180,9 +242,9 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r8">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
-                        <td class="c3">0</td>
+                        <td class="c3">1</td>
                         <td class="c4">0</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
@@ -192,10 +254,10 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r9">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
                         <td class="c3">0</td>
-                        <td class="c4">0</td>
+                        <td class="c4">1</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
                         <td class="c7">0</td>
@@ -204,10 +266,10 @@
                         <td class="c10">0</td>
                     </tr>
                     <tr class="r10">
-                        <td class="c1">0</td>
+                        <td class="c1">none</td>
                         <td class="c2">0</td>
                         <td class="c3">0</td>
-                        <td class="c4">0</td>
+                        <td class="c4">1</td>
                         <td class="c5">0</td>
                         <td class="c6">0</td>
                         <td class="c7">0</td>
@@ -459,10 +521,7 @@
             </table>
         </div>
 
-        <h1 class="heading"></h1>
-        <h2 class="heading"></h2>
-        <h1></h1>
-        <h2></h2>
+        <footer>footer</footer>
 
         <datalist id="filtered-card-list">
 

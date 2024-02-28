@@ -60,6 +60,73 @@ function getFaction(id) {
     }
 }
 
+function changeFactionStats() {
+    // Reset Faction Numbers
+    const counters = document.querySelectorAll('#faction-counters > p');
+    counters.forEach(counter => {
+        counter.innerHTML = "0";
+    });
+
+    // Update Faction Numbers
+    const factions = [0, 0, 0, 0, 0];
+    const cardInputs = document.querySelectorAll(".card-dropdown");
+    cardInputs.forEach(input => {
+        const factionId = input.getAttribute("faction");
+        switch (factionId) {
+            case "1":
+                factions[1] += 1;
+                break;
+            case "2":
+                factions[2] += 1;
+                break;
+            case "3":
+                factions[3] += 1;
+                break;
+            case "4":
+                factions[4] += 1;
+                break;
+            case "11":
+                factions[0] += 1;
+                break;
+            case "12": // All factions
+                for (let i = 0; i < factions.length; i++) {
+                    factions[i] += 1;
+                }
+                break;
+            case "":
+                break;
+            default:
+                console.log("unknown faction ID: ", factionId);
+        }
+    });
+    for (let i=0; i<5; i++) {
+        counters[i].innerHTML = factions[i];
+    }
+
+    // Update Pie Chart
+    console.log(factions)
+    const pieChart = document.querySelector('.pie-chart');
+    const sum = factions.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    const calcDeg = (amount) => (amount / sum) * 360;
+    const grayStop = calcDeg(factions[0]);
+    const blueStop = grayStop + calcDeg(factions[1]);
+    const greenStop = blueStop + calcDeg(factions[2]);
+    const yellowStop = greenStop + calcDeg(factions[3]);
+    pieChart.style.backgroundImage = `
+        conic-gradient(
+            gray 0deg, 
+            gray ${grayStop}deg, 
+            #0000aa ${grayStop}deg, 
+            #0000aa ${blueStop}deg, 
+            #006600 ${blueStop}deg, 
+            #006600 ${greenStop}deg, 
+            #cc9900 ${greenStop}deg, 
+            #cc9900 ${yellowStop}deg, 
+            #990000 ${yellowStop}deg, 
+            #990000 360deg
+        )`;
+}
+
 function transferDataFromDatalist(target, targetValue, cells) {
     // Check if the ship is in either datalist, if so, transfer the data attributes of the selected option
     const shipDataList = document.getElementById("filtered-card-list");
@@ -90,15 +157,17 @@ function transferDataFromDatalist(target, targetValue, cells) {
 function insertAbilities(cardId, cells) {
     // reset abilities
     cells.forEach(cell => {
-        cell.innerHTML = 0
+        cell.innerHTML = "0";
     })
 
     // get card data
     const cardAbilites = jsonData[cardId];
-    // console.log(cardAbilites);
     
     // Update card data
-    // cardAbilites[]
+    for (let i=0; i<cardAbilites["abi"].length; i++) {
+        const cell = cells[cardAbilites["abi"][i]-1];
+        cell.innerHTML = parseInt(cell.innerHTML) + cardAbilites["str"][i];
+    }
 }
 
 function handleCardChange(event) {
@@ -110,9 +179,7 @@ function handleCardChange(event) {
     // Verify user input, delete if nonexisting card
     transferDataFromDatalist(event.target, selectedValue, cells);
 
-    // Finish adding card data
-    const cardId = event.target.getAttribute("card-id");
-    insertAbilities(cardId, [...cells].slice(3, 10));
+    changeFactionStats();
 
     // Change color
     const factionId = event.target.getAttribute("faction");
@@ -120,6 +187,12 @@ function handleCardChange(event) {
     event.target.style.color = color;
     cells.forEach(cell => {
         cell.style.color = color;
-    });    
+    });
+
+    // Finish adding card data
+    const cardId = event.target.getAttribute("card-id");
+    insertAbilities(cardId, [...cells].slice(2, 9));
+
+
 };
 

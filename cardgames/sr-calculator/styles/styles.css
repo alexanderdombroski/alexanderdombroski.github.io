@@ -5,6 +5,103 @@ body {
     min-width: 700px; /* Change this later? */
 }
 
+/* --------------- Factions Graph --------------- */
+
+.graphs-div {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.graphs-div > h3 {
+    font-size: 18px;
+    margin: 2px auto;
+}
+
+.pie-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; 
+    background-image: conic-gradient( 
+        gray 360deg,  
+        green 0,
+        red 0,
+        blue 0,
+        yellow 0);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.donut-hole {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+#faction-counters {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    display: none;
+}
+
+#faction-counters > p {
+    margin: 0 auto;
+}
+
+/* --------------- Processed Data --------------- */
+
+.processed-data-div {
+    width: 100%;
+    display: flex;
+}
+
+.graphs-div {
+    width: 25%;
+}
+
+.data-calculations-div {
+    width: 50%;
+    border: solid 2px;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.data-block {
+    margin: 0;
+}
+
+.data-block > h2 {
+    font-size: 30px;
+    margin: 0 auto;
+}
+
+.data-block > h3 {
+    font-size: 14px;
+    margin: 0 auto;
+}
+
+/* --------------- Filters --------------- */
+
+.filters-div {
+    margin: 5px auto;
+}
+
+.filters-div > label {
+    font-size: 16px;
+}
+
+.filters-div > select {
+    font-size: 14px;
+}
+
+/* --------------- Raw Data --------------- */
+
 .raw-data-div {
     display: flex;
     width: 100%;
