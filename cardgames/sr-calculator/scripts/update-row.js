@@ -12,7 +12,6 @@ let jsonData
      }
 })();
 
-
 // Add event listeners
 (function cardInputsListenerSetup() {
     const cardSelectors = document.getElementsByClassName("card-dropdown");
@@ -93,7 +92,7 @@ function changeFactionStats() {
                     factions[i] += 1;
                 }
                 break;
-            case "":
+            case "0":
                 break;
             default:
                 console.log("unknown faction ID: ", factionId);
@@ -104,7 +103,6 @@ function changeFactionStats() {
     }
 
     // Update Pie Chart
-    console.log(factions)
     const pieChart = document.querySelector('.pie-chart');
     const sum = factions.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     const calcDeg = (amount) => (amount / sum) * 360;
@@ -127,21 +125,36 @@ function changeFactionStats() {
         )`;
 }
 
+function calculateColumnAverage(columnId, deckSize) {
+    let columnTotal = 0;
+    const cells = document.querySelectorAll(columnId);
+    cells.forEach(cell => {
+        columnTotal += parseInt(cell.innerHTML);
+    });
+    return columnTotal / deckSize;
+}
+
 function changeProcessedStats() {
     // Change deck size counter
     const cardInputs = document.querySelectorAll(".card-dropdown");
-    let cardCount = 0;
+    let deckSize = 0;
     cardInputs.forEach(card => {
         const cardId = card.getAttribute('card-id');
-        if (cardId != "") {
-            cardCount += 1;
+        if (cardId != "0") {
+            deckSize += 1;
         }
     });
     const deckSizeCounter = document.getElementById('deck-size');
-    deckSizeCounter.innerHTML = cardCount;
-    
-    
-    
+    deckSizeCounter.innerHTML = deckSize;
+    const handSize = parseInt(document.getElementById('hand-size').value);
+
+    const cardsDrawn = document.getElementById("cards-drawn");
+    console.log(deckSize, calculateColumnAverage(".c9", deckSize), handSize)
+    cardsDrawn.innerHTML = (calculateColumnAverage(".c9", deckSize) * handSize).toFixed(2);
+
+
+
+
 }
 
 function transferDataFromDatalist(target, targetValue, cells) {
@@ -171,19 +184,137 @@ function transferDataFromDatalist(target, targetValue, cells) {
     }
 }
 
-function insertAbilities(cardId, cells) {
-    // reset abilities
-    cells.forEach(cell => {
-        cell.innerHTML = "0";
-    })
+function calculateAllyActivationChance(handSize, drawChance, cardsAlreadyDrawn=1, expectedDraws=0) {
+    return 1 - (1-drawChance)**(handSize+expectedDraws-cardsAlreadyDrawn);
+}
 
-    // get card data
-    const cardAbilites = jsonData[cardId];
+function makeCardIdList() {
+    const cardIds = [];
+    const cardInputs = document.querySelectorAll(".card-dropdown");
+    cardInputs.forEach(card => {
+        const cardId = card.getAttribute('card-id');
+        if (cardId === "") {
+            cardIds.push(0);
+        } else {
+            cardIds.push(parseInt(cardId));
+        }
+    });
+    return cardIds;
+}
+
+function makeFactionIdList() {
+    const factionIds = [];
+    const cardInputs = document.querySelectorAll(".card-dropdown");
+    cardInputs.forEach(card => {
+        const cardId = card.getAttribute('card-id');
+        if (cardId === "") {
+            factionIds.push(0);
+        } else {
+            factionIds.push(parseInt(cardId));
+        }
+    });
+    return factionIds;
+}
+
+function countBases() {
+    const defences = document.querySelectorAll(".c10");
+    let bases = 0;
+    defences.forEach(unit => {
+        if (parseInt(unit.innerHTML) !== 0) {
+            bases += 1;
+        }
+    });
+    return bases;
+}
+
+function updateAllRawAllyStats() {
+    // Clear columns affected by ally abilities
+    for (let i = 3; i <= 9; i++) {
+        document.querySelectorAll(`.c${i}`).forEach(cell => {
+            cell.innerHTML = '0';
+        });
+    }
+
+    // Associate rows with card and faction Ids
+    const cardIds = makeCardIdList();
+    const factionIds = makeFactionIdList();
+
+    // Calculate Base Ally Activation chance
+        // Get counts
+    const handSize = parseInt(document.getElementById('hand-size').value)
+    const deckSize = parseInt(document.getElementById('deck-size').innerHTML)
     
-    // Update card data
-    for (let i=0; i<cardAbilites["abi"].length; i++) {
-        const cell = cells[cardAbilites["abi"][i]-1];
-        cell.innerHTML = parseInt(cell.innerHTML) + cardAbilites["str"][i];
+    const unalignedCount = parseInt(document.querySelector(".none-counter").innerHTML);
+    const blobCount = parseInt(document.querySelector(".blob-counter").innerHTML);
+    const tradeCount = parseInt(document.querySelector(".trade-counter").innerHTML);
+    const starCount = parseInt(document.querySelector(".star-counter").innerHTML);
+    const mechCount = parseInt(document.querySelector(".mech-counter").innerHTML);
+
+    const baseCount = countBases();
+    
+    const counts = [
+        unalignedCount, 
+        tradeCount, 
+        blobCount, 
+        starCount, 
+        mechCount, 
+        tradeCount + starCount,
+        tradeCount + mechCount,
+        mechCount + starCount,
+        tradeCount + blobCount,
+        blobCount + starCount,
+        mechCount + blobCount,
+        baseCount
+    ];
+
+    function calculateFactionRatio(rowId, factionId, allyReq, allyFac) {
+        let duplicateCount = 0
+        if (allyFac === 11) {
+            const base = document.querySelector(`.${rowId} .c10`);
+            duplicateCount = (parseInt(base.innerHTML) === 0) ? 0:1;
+        } else if (factionId > 4) {
+            duplicateCount = factionId === allyFac ? 2:1; 
+        } else {
+            duplicateCount = factionId === allyFac ? 1:0;
+        }
+        return (counts[allyFac] - duplicateCount - allyReq + 1) / (deckSize - allyReq + 1);
+    }
+
+    // Calculate Draw Power
+    const drawColumn = document.querySelectorAll('.c9');
+    
+    for (let i=0; i<30; i++) {
+        let drawPower = 0;
+        const cardId = cardIds[i];
+        if (cardId !== 0) {
+            const cardData = jsonData[cardId];
+            for (let j=0; j<cardData["abi"].length; j++) {
+                if (cardData["abi"][j] === 7) {
+                    switch (cardData["req"][j]) {
+                        case 0:
+                            drawPower += cardData["str"][j];
+                            break;
+                        case 1:
+                            drawPower += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j]));
+                            break;
+                        case 2:
+                            drawPower += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j])) * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 2, cardData["fac"][j]), 2);
+                            break;
+                        default:
+                            console.log("Error in determing ability requirement type for drawpower")
+                    }
+                }
+            }
+        drawColumn[i].innerHTML = drawPower.toFixed(2);
+        }
+    }
+
+    // Factor in drawing an ally, allowing to draw again
+
+
+    // Calculate all other ability power
+    for (let i=0; i<30; i++) {
+
     }
 }
 
@@ -207,9 +338,10 @@ function handleCardChange(event) {
     });
 
     // Finish adding card data
-    const cardId = event.target.getAttribute("card-id");
-    insertAbilities(cardId, [...cells].slice(2, 9));
+    // const cardId = event.target.getAttribute("card-id");
+    // insertAbilities(cardId, factionId, [...cells].slice(2, 9));
 
+    updateAllRawAllyStats()
     changeProcessedStats()
 };
 
