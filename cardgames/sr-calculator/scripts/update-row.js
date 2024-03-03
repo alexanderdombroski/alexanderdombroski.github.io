@@ -34,6 +34,8 @@ function getColor(id) {
             return "black"
         case "12": // All factions
             return "#fc5e03" // red-orange
+        case "0":
+            return "lightgray"
         default:
             console.log("error in color selection id=", id)
     }
@@ -149,12 +151,17 @@ function changeProcessedStats() {
     const handSize = parseInt(document.getElementById('hand-size').value);
 
     const cardsDrawn = document.getElementById("cards-drawn");
-    console.log(deckSize, calculateColumnAverage(".c9", deckSize), handSize)
     cardsDrawn.innerHTML = (calculateColumnAverage(".c9", deckSize) * handSize).toFixed(2);
 
 
 
 
+}
+
+function clearRow (cells, defaultValue="0") {
+    cells.forEach(cell => {
+        cell.innerHTML = defaultValue;
+    });
 }
 
 function transferDataFromDatalist(target, targetValue, cells) {
@@ -181,6 +188,9 @@ function transferDataFromDatalist(target, targetValue, cells) {
     // Remove the card if it doesn't exist in the datalists
     if (optionNotFound) {
         target.value = "";
+        target.setAttribute("faction", "0");
+        target.setAttribute("card-id", "0");
+        clearRow(cells)
     }
 }
 
