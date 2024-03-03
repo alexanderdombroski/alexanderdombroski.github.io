@@ -306,7 +306,7 @@ function updateAllRawAllyStats() {
         } else {
             duplicateCount = factionId === allyFac ? 1:0;
         }
-        return (counts[allyFac] - duplicateCount - allyReq + 1) / (deckSize - allyReq + 1);
+        return Math.max(0, (counts[allyFac] - duplicateCount - allyReq + 1) / (deckSize - allyReq));
     }
 
     // Calculate Draw Power
