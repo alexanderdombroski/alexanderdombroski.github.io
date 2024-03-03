@@ -131,7 +131,7 @@ function calculateColumnAverage(columnId, deckSize) {
     let columnTotal = 0;
     const cells = document.querySelectorAll(columnId);
     cells.forEach(cell => {
-        columnTotal += parseInt(cell.innerHTML);
+        columnTotal += parseFloat(cell.innerHTML);
     });
     return columnTotal / deckSize;
 }
@@ -153,10 +153,12 @@ function changeProcessedStats() {
     // Calculate Average Draws
     const cardsDrawn = document.getElementById("cards-drawn");
     const baseDrawPower = calculateColumnAverage(".c9", deckSize);
-    const drawPower = (baseDrawPower * (handSize+baseDrawPower));
-    cardsDrawn.innerHTML = drawPower.toFixed(2);
+    const drawPower = (handSize+baseDrawPower*handSize); // Accounts for cards being drawn, and the chance each of those draw a card
+    cardsDrawn.innerHTML = (baseDrawPower*drawPower).toFixed(2);
 
-
+    // Cycling
+    const cycling = document.getElementById("cycling");
+    cycling.innerHTML = Math.max(1, deckSize / (handSize + baseDrawPower * drawPower)).toFixed(2)
 
 }
 
@@ -322,7 +324,6 @@ function updateAllRawAllyStats() {
 
     // Update Average Draw Power per turn
     const cardsDrawn = document.getElementById("cards-drawn");
-    console.log(calculateColumnAverage(".c9", deckSize), handSize);
     cardsDrawn.innerHTML = (calculateColumnAverage(".c9", deckSize) * handSize).toFixed(2);
 
     // Clear Draw Column for recalculation
@@ -342,13 +343,13 @@ function updateAllRawAllyStats() {
                 if (cardData["abi"] === 7) {
                     switch (cardData["req"][j]) {
                         case 0:
-                            drawItself += cardData["str"][j];
+                            drawItself += cardData["str"][j] / deckSize;
                             break;
                         case 1:
-                            drawItself += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j]));
+                            drawItself += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j])) / deckSize;
                             break;
                         case 2:
-                            drawItself += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j])) * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 2, cardData["fac"][j]), 2);
+                            drawItself += cardData["str"][j] * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 1, cardData["fac"][j])) * calculateAllyActivationChance(handSize, calculateFactionRatio(`r${i+1}`, factionIds[i], 2, cardData["fac"][j]), 2) / deckSize;
                             break;
                         default:
                             console.log("Error in determing ability requirement type for drawpower")
