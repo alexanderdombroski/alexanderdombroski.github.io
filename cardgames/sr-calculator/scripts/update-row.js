@@ -156,9 +156,24 @@ function changeProcessedStats() {
     const drawPower = (handSize+baseDrawPower*handSize); // Accounts for cards being drawn, and the chance each of those draw a card
     cardsDrawn.innerHTML = (baseDrawPower*drawPower).toFixed(2);
 
-    // Cycling
+    // Other Stats
     const cycling = document.getElementById("cycling");
     cycling.innerHTML = Math.max(1, deckSize / (handSize + baseDrawPower * drawPower)).toFixed(2)
+    
+    function displayProcessedStat(statId, selector, multiplier=drawPower, divisor=deckSize, fixed=2) {
+        const element = document.getElementById(statId);
+        element.innerHTML = (calculateColumnAverage(selector, divisor) * multiplier).toFixed(fixed);
+    }
+    
+    displayProcessedStat("deck-value", ".c2", 1, 1, 0);
+    displayProcessedStat("hand-value", ".c2");
+    displayProcessedStat("trade", ".c3");
+    displayProcessedStat("combat", ".c4");
+    displayProcessedStat("authority", ".c5");
+    displayProcessedStat("discard", ".c6");
+    displayProcessedStat("scrap", ".c7");
+    displayProcessedStat("t-scrap", ".c8");
+    displayProcessedStat("defence", ".c10");
 
 }
 
