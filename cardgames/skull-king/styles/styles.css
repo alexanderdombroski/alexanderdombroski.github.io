@@ -1,0 +1,33 @@
+body {
+    margin: 0 auto;
+    text-align: center;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 1000px;
+}
+
+td {
+    border: solid black 1px;
+}
+
+thead td {
+    font-size: 14px;
+}
+
+td select, td input {
+    border: none;
+    font-size: 10px;
+    text-align: center;
+}
+
+.input-row td {
+    padding: 0;
+}
+
+tbody td {
+    padding: 4px auto;
+    font-size: 10px;
+}
