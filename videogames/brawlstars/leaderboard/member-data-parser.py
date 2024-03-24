@@ -60,19 +60,22 @@ def SortLeaderBoard(leaderboard):
 
 def DisplayLeaderBoard(leaderboard, playernames):
     position = 0
-    for key, item in leaderboard.items():
-        position +=1
-        print(f"{position}. {playernames[key]}: {item}")
+    upper_position = -1
+    for key, trophy in leaderboard.items():
+        if upper_position != trophy:
+            position +=1
+        print(f"{position}. {playernames[key]}: {trophy}")
+        upper_position = trophy
 
 def main():
     # Update Daily Trophy Counts
     ClubData = GetJsonFile("data/day2.json")
     DailyData = GetJsonFile("data/dailydata.json")
     MemberDataDict = ClubData["members"] # List of member dictionary in trophy order
-    MemberTrophyDict = FormatDailyInstance(MemberDataDict)
+    # MemberTrophyDict = FormatDailyInstance(MemberDataDict)
 
-    AddDailyInstance(DailyData, MemberTrophyDict)
-    OverWriteJsonFile(DailyData, "data/dailydata.json")
+    # AddDailyInstance(DailyData, MemberTrophyDict)
+    # OverWriteJsonFile(DailyData, "data/dailydata.json")
 
     # Update Member/Key File
     playernames = GetJsonFile("data/members.json")
