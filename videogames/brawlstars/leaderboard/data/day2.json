@@ -5,14 +5,14 @@
   "type": "inviteOnly",
   "badgeId": 8000053,
   "requiredTrophies": 20000,
-  "trophies": 827776,
+  "trophies": 828929,
   "members": [
     {
       "tag": "#JLQJL2UU",
       "name": "Xebalik",
       "nameColor": "0xffff9727",
       "role": "vicePresident",
-      "trophies": 44810,
+      "trophies": 44872,
       "icon": {
         "id": 28000006
       }
@@ -22,7 +22,7 @@
       "name": "짱짱정지민",
       "nameColor": "0xffa8e132",
       "role": "member",
-      "trophies": 38679,
+      "trophies": 38722,
       "icon": {
         "id": 28000386
       }
@@ -42,7 +42,7 @@
       "name": "BigPino",
       "nameColor": "0xffa2e3fe",
       "role": "member",
-      "trophies": 35151,
+      "trophies": 35204,
       "icon": {
         "id": 28000392
       }
@@ -52,7 +52,7 @@
       "name": "ⁱᵃᵐ|ℚ𝙪𝕒𝕟𒆜",
       "nameColor": "0xff4ddba2",
       "role": "member",
-      "trophies": 34735,
+      "trophies": 34732,
       "icon": {
         "id": 28000258
       }
@@ -62,7 +62,7 @@
       "name": "jelly",
       "nameColor": "0xffff9727",
       "role": "member",
-      "trophies": 33345,
+      "trophies": 33321,
       "icon": {
         "id": 28000410
       }
@@ -72,7 +72,7 @@
       "name": "TA|Alex|CT",
       "nameColor": "0xfff05637",
       "role": "senior",
-      "trophies": 32665,
+      "trophies": 32711,
       "icon": {
         "id": 28000360
       }
@@ -82,7 +82,7 @@
       "name": "TA | JDuBski’",
       "nameColor": "0xffffffff",
       "role": "vicePresident",
-      "trophies": 32239,
+      "trophies": 32222,
       "icon": {
         "id": 28000099
       }
@@ -92,7 +92,7 @@
       "name": "James twd",
       "nameColor": "0xffcb5aff",
       "role": "member",
-      "trophies": 32173,
+      "trophies": 32185,
       "icon": {
         "id": 28000391
       }
@@ -102,7 +102,7 @@
       "name": "TA|BANG",
       "nameColor": "0xffffffff",
       "role": "senior",
-      "trophies": 30326,
+      "trophies": 30363,
       "icon": {
         "id": 28000003
       }
@@ -122,7 +122,7 @@
       "name": "jaleel121",
       "nameColor": "0xff1ba5f5",
       "role": "member",
-      "trophies": 28929,
+      "trophies": 29024,
       "icon": {
         "id": 28000297
       }
@@ -132,7 +132,7 @@
       "name": "naruto gamer",
       "nameColor": "0xffffce89",
       "role": "member",
-      "trophies": 28469,
+      "trophies": 28466,
       "icon": {
         "id": 28000396
       }
@@ -142,7 +142,7 @@
       "name": "THE END is",
       "nameColor": "0xffff9727",
       "role": "senior",
-      "trophies": 27732,
+      "trophies": 27960,
       "icon": {
         "id": 28000226
       }
@@ -152,7 +152,7 @@
       "name": "ggs",
       "nameColor": "0xffa2e3fe",
       "role": "member",
-      "trophies": 27277,
+      "trophies": 27340,
       "icon": {
         "id": 28000034
       }
@@ -162,7 +162,7 @@
       "name": "αβxnd0n",
       "nameColor": "0xffcb5aff",
       "role": "member",
-      "trophies": 27257,
+      "trophies": 27278,
       "icon": {
         "id": 28000379
       }
@@ -172,7 +172,7 @@
       "name": "ARC-X",
       "nameColor": "0xff4ddba2",
       "role": "member",
-      "trophies": 26844,
+      "trophies": 26873,
       "icon": {
         "id": 28000288
       }
@@ -192,7 +192,7 @@
       "name": "Conner vs.world",
       "nameColor": "0xff1ba5f5",
       "role": "member",
-      "trophies": 24769,
+      "trophies": 24719,
       "icon": {
         "id": 28000404
       }
@@ -202,7 +202,7 @@
       "name": "TA|Chicken",
       "nameColor": "0xffa8e132",
       "role": "member",
-      "trophies": 24306,
+      "trophies": 24308,
       "icon": {
         "id": 28000182
       }
@@ -212,9 +212,19 @@
       "name": "TA |PENGUIN",
       "nameColor": "0xff1ba5f5",
       "role": "member",
-      "trophies": 23582,
+      "trophies": 23608,
       "icon": {
         "id": 28000367
+      }
+    },
+    {
+      "tag": "#GQGV80QV2",
+      "name": "cheese",
+      "nameColor": "0xfff05637",
+      "role": "senior",
+      "trophies": 22347,
+      "icon": {
+        "id": 28000092
       }
     },
     {
@@ -225,16 +235,6 @@
       "trophies": 22300,
       "icon": {
         "id": 28000393
-      }
-    },
-    {
-      "tag": "#GQGV80QV2",
-      "name": "cheese",
-      "nameColor": "0xfff05637",
-      "role": "senior",
-      "trophies": 22273,
-      "icon": {
-        "id": 28000092
       }
     },
     {
@@ -262,7 +262,7 @@
       "name": "TA |shiba!",
       "nameColor": "0xffa2e3fe",
       "role": "president",
-      "trophies": 21231,
+      "trophies": 21246,
       "icon": {
         "id": 28000112
       }
@@ -272,7 +272,7 @@
       "name": "sniperpan",
       "nameColor": "0xffff8afb",
       "role": "member",
-      "trophies": 20060,
+      "trophies": 20062,
       "icon": {
         "id": 28000297
       }
@@ -282,7 +282,7 @@
       "name": "Munchbuns",
       "nameColor": "0xff1ba5f5",
       "role": "member",
-      "trophies": 19038,
+      "trophies": 19174,
       "icon": {
         "id": 28000090
       }
@@ -292,7 +292,7 @@
       "name": "alex",
       "nameColor": "0xffffffff",
       "role": "member",
-      "trophies": 18462,
+      "trophies": 18499,
       "icon": {
         "id": 28000000
       }
@@ -302,7 +302,7 @@
       "name": "Prince Zuko",
       "nameColor": "0xfff05637",
       "role": "member",
-      "trophies": 13236,
+      "trophies": 13505,
       "icon": {
         "id": 28000179
       }

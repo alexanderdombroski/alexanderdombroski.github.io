@@ -72,9 +72,9 @@ def main():
     ClubData = GetJsonFile("data/day2.json")
     DailyData = GetJsonFile("data/dailydata.json")
     MemberDataDict = ClubData["members"] # List of member dictionary in trophy order
-    # MemberTrophyDict = FormatDailyInstance(MemberDataDict)
+    MemberTrophyDict = FormatDailyInstance(MemberDataDict)
 
-    # AddDailyInstance(DailyData, MemberTrophyDict)
+    AddDailyInstance(DailyData, MemberTrophyDict)
     # OverWriteJsonFile(DailyData, "data/dailydata.json")
 
     # Update Member/Key File
