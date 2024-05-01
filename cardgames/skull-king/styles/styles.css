@@ -3,10 +3,12 @@ body {
     text-align: center;
 }
 
+/* --------------- Table Settings --------------- */
+
 table {
-    margin: 0 auto;
+    margin: 5px auto;
     border-collapse: collapse;
-    width: 1000px;
+    width: 1200px;
 }
 
 td {
@@ -15,19 +17,37 @@ td {
 
 thead td {
     font-size: 14px;
+    padding: 4px 0;
 }
 
 td select, td input {
     border: none;
-    font-size: 10px;
+    font-size: 12px;
     text-align: center;
 }
 
-.input-row td {
+tbody td {
+    padding: 4px 0;
+    font-size: 12px;
+}
+
+/* Column one */
+
+.results > td:nth-child(1), td select, thead > tr > td:nth-child(1) {
+    width: 100px;
+}
+
+tbody > tr > td:nth-child(-n+2) {
+    width: 50px;
+}
+
+/* Data Rows */
+
+.bid, .end, .bonus {
+    width: 44px;
     padding: 0;
 }
 
-tbody td {
-    padding: 4px auto;
-    font-size: 10px;
+.results > td:nth-last-child(-n+8) {
+    width: 133px;
 }
