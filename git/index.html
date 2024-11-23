@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Git Cheat Sheet</h1>
+    <main class="two">
+      <section>
+        <h2>Installation</h2>
+        <nav>
+          <p>Install Git:</p>
+          <a href="https://git-scm.com">https://git-scm.com</a> 
+          <p>Create Github Account:</p>
+          <a href="https://github.com/join">https://github.com/join</a>
+        </nav>
+
+				<h2>Repo Setup</h2>
+				<div class="two">
+					<div>
+            <p>git init</p>
+            <p>git remote add [name] [url]</p>
+          </div>
+					<p>git clone [url]</p>
+				</div>
+        <p><span class="command">git init</span> creates a brand new repo</p>
+        <p><span class="command">git clone</span> creates a local branch of an existing repository</p>
+
+        <h2>Saving Changes</h2>
+        <div class="two">
+          <p class="span">git status</p>
+          <p>git add [file] [file2]</p>
+          <p>git add .</p>
+          <p>git commit</p>
+          <p>git commit -m [message]</p>
+        </div>
+        <p><span class="command">git commit --amend</span> modifies the last commit (don't use on already merged/pushed commits)</p>
+        <p><span class="command">git add .</span> will stage all files for the next commit.</p>
+        
+
+        <h2>Logging</h2>
+        <div class="two">
+          <p>git log</p>
+          <p>git log --oneline</p>
+        </div>
+        <p>See commit history</p>
+
+        <div>
+          <p>git show [commit]</p>
+        </div>
+        <p>Show details about a commit by specifying a commit hash</p>
+
+				
+				
+
+				<h2>Undo Commits</h2>
+				<div>
+          <p>git revert [commit]</p>
+        </div>
+        <p>Create a new commit to undo a previous</p>
+        
+        <div class="two">
+					<div>
+						<p>git reset HEAD~1</p>
+						<p>git retore .</p>
+					</div>
+					<p>git reset --hard HEAD~1</p>
+				</div>
+        <p>Permanatly deletes a previous commit</p>
+				
+				<h2>Store Changes Temporarily</h2>
+				<div>
+					<p>git stash</p>
+					<p>git stash pop</p>
+				</div>
+        <p><span class="command">git stash -u</span> to also stash away untracked files</p>
+        <p>Times when stashing is useful:</p>
+        <ul>
+          <li>To switch a branch without commiting</li>
+          <li>Move changes after forgetting to branch from main</li>
+          <li>Testing different sets of changes</li>
+        </ul>
+        
+
+      </section>
+			<section>
+
+				<h2>Switching Branches</h2>
+        <p><span class="command">git branch</span> to view all branches</p>
+        <div class="two">
+          <p>git switch [branch]</p>
+          <p>git checkout [branch]</p>
+          <p>git switch -c [branch]</p>
+          <p>git checkout -b [branch]</p>
+        </div>
+        <p>Use <span class="command">-c</span> or <span class="command">-b</span> to create a new branch before moving.</p>
+        
+
+        <h2>Merging/Rebasing Branches</h2>
+        <div class="two">
+          <p class="span">*Commit Changes in from-branch</p>
+          <p class="span">git diff [from-branch]..[to-branch]</p>
+					<p>git switch [to-branch]</p>
+					<p>git checkout [to-branch]</p>
+					<p>git merge [from-branch]</p>
+          <p>git rebase [from-branch]</p>
+        </div>
+        <p><span class="command">git branch -D [from-branch]</span> optionally to delete branch after merge</p>
+
+        <h3>Resolving Conflicts</h3>
+        <p>While rebasing/merging, use the <span class="command">--continue</span> to finish merging after resolving conflicts</p>
+        <p>While rebasing/merging, use the <span class="command">--abort</span> to give up after failing to resolve conflicts</p>
+
+
+        <h2>Git Remotes</h2>
+				<div>
+					<p>git remote -v</p>
+          <p>git remote add [name] [url]</p>
+          <p>git remote remove [name] [url]</p>
+					<p>git remote set-url [name] [url]</p>
+				</div>
+        <p>Common remote names are origin and upstream</p>
+
+        <h2>Pushing Changes to Remote Branch</h2>
+        <div class="two">
+          <p>git push</p>
+					<p>git push [remote] [branch]</p>
+        </div>
+					<p><span class="command">git push -u [remote] [branch]</span> Sets the upstream for future pushes so the command can be run in the future with only git push</p>
+					<p><span class="command">git push --force</span> overwrites the remote branch</p>
+
+				<p><span class="command">git config --global push.autoSetupRemote true</span> configures an option to never have to set upstream for branches</p>
+
+        <h2>Pulling Changes from Remote Branch</h2>
+        <div class="two">
+          <p>git pull</p>
+          <div>
+            <p>git fetch</p>
+            <p>git merge</p>
+          </div>
+        </div>
+        <p><span class="command">git pull --rebase</span> to avoid merge commits</p>
+
+          <!-- 
+Conflict Resolution
+git diff // View changes between working directory and index.
+git diff [branch1]..[branch2] // View differences between branches.
+git mergetool // Use a visual tool to resolve conflicts.
+Tagging
+git tag [tagname] // Create a lightweight tag.
+git tag -a [tagname] -m [message] // Create an annotated tag.
+git push origin [tagname] // Push a tag to the remote repository.
+git tag -d [tagname] // Delete a tag locally.
+Cleaning Up
+git clean -n // Show files to be deleted if cleanup is executed.
+git clean -f // Remove untracked files. -->
+
+
+
+			</section>
+    </main>
+  </body>
+</html>

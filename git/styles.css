@@ -1,0 +1,71 @@
+body {
+    font-family: "Ubuntu Mono", system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+a {
+    display: block;
+    color: black;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+main {
+    gap: 10px;
+}
+
+div > p, div > a {
+    background-color: white;
+    margin: 0;
+    line-height: 30px;
+    height: 100%;
+    align-content: center;
+    font-size: 12px;
+}
+
+
+div {
+    display: grid;
+    margin: 10px auto;
+    text-align: center;
+    align-items: center;
+    column-gap: 5px;
+    row-gap: 5px;
+    
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: aliceblue;
+    overflow: hidden;
+
+    page-break-inside: avoid;
+}
+
+div > div {
+    border: none;
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 0;
+}
+
+
+.two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+}
+
+.span {
+    grid-column-end: span 2;
+}
+
+.command {
+    background-color: rgb(235, 235, 235);
+    color: darkred;
+    padding: 2px 3px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+
+
