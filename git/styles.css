@@ -1,5 +1,31 @@
+:root {
+    --primary-dark-color: #222823;
+    --secondary-dark-color: #3b453c;
+    --primary-light-color: #E1E2FF;
+    --accent1-color: #99ff15;
+    --accent2-color: #99ff15;
+
+    --spotlight-gap: 3px;
+}
+
 body {
     font-family: "Ubuntu Mono", system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--primary-dark-color);
+    margin: 0;
+    padding: var(--spotlight-gap);
+    padding-top: 0px;
+}
+
+header > span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & p { margin: 0; }
+}
+
+a:link, a:visited, p, h1, h2, h3, h4, h5, li {
+    color: var(--primary-light-color);
 }
 
 a {
@@ -7,21 +33,56 @@ a {
     color: black;
 }
 
+p {
+    margin: 10px auto;
+}
+
 h1, h2, h3, h4, h5 {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-main {
-    gap: 10px;
+h2 {
+    border-bottom: 3px var(--secondary-dark-color) dashed;
+    margin-bottom: 15px;
+    margin-top: 10px;
 }
 
-div > p, div > a {
-    background-color: white;
+h2.small {
+    font-size: 20px;
+}
+
+p.small {
+    font-size: 9px;
+}
+
+ul {
+    margin-top: 0px;
+    padding-left: 30px;
+}
+
+main {
+    gap: var(--spotlight-gap);
+}
+
+article, header {
+    background-color: var(--primary-dark-color);
+    border-radius: 5px;
+    padding: 1px;
+    margin: var(--spotlight-gap) 0px;
+    padding-bottom: 10px;
+}
+header {
     margin: 0;
-    line-height: 30px;
+}
+
+div > p {
+    background-color: var(--primary-dark-color);
+    margin: 0;
+    line-height: 25px;
     height: 100%;
     align-content: center;
     font-size: 12px;
+    white-space: nowrap;
 }
 
 
@@ -30,15 +91,14 @@ div {
     margin: 10px auto;
     text-align: center;
     align-items: center;
-    column-gap: 5px;
-    row-gap: 5px;
+    column-gap: 2px;
+    row-gap: 2px;
     
-    border: 1px solid black;
+    border: 2px solid var(--secondary-dark-color);
     border-radius: 10px;
-    background-color: aliceblue;
-    overflow: hidden;
+    background-color: var(--secondary-dark-color);
 
-    page-break-inside: avoid;
+    overflow: hidden;
 }
 
 div > div {
@@ -54,18 +114,74 @@ div > div {
     grid-template-columns: 1fr 1fr;
     justify-content: center;
 }
+.left {
+    grid-template-columns: 2fr 3fr;
+}
 
 .span {
     grid-column-end: span 2;
 }
 
 .command {
-    background-color: rgb(235, 235, 235);
-    color: darkred;
+    background-color: var(--secondary-dark-color);
+    color: var(--accent1-color);
     padding: 2px 3px;
     border-radius: 5px;
     font-size: 12px;
 }
 
+.ul-title {
+    margin-bottom: 5px;
+}
 
+p:has(+ a) {
+    margin-bottom: 5px;
+}
+
+#help a, #help2 a {
+    display: inline;
+}
+
+
+.spotlight {
+    z-index: -1;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent1-color);
+    pointer-events: none; /* Makes it unclickable */
+    box-shadow: 0 0 20px 10px var(--accent1-color);
+}
+
+@media print {
+    @page {
+        margin: 0;
+        padding: 20px;
+    }
+    div {
+        page-break-inside: avoid;
+    }
+
+    .break {
+        page-break-before: always;
+    }
+
+    a {
+        text-underline-offset: 4px;
+    }
+    main {
+        gap: 10px;
+    }
+    .spotlight {
+        display: none;
+    }
+    #help {
+        display:  none;
+    }
+    #help2 {
+        display: block;
+    }
+}
 
