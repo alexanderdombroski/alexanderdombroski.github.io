@@ -10,7 +10,7 @@ document.body.addEventListener('mousemove', (e) => {
   const x = e.pageX;
   const y = e.pageY;
 
-  spotlight.style.top = `${y - 10}px`; // Center spotlight vertically
+  spotlight.style.top = `${y}px`; // Center spotlight vertically
   spotlight.style.left = `${x}px`; // Center spotlight horizontally
 });
 
