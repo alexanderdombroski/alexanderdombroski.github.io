@@ -3,3 +3,6 @@
 
 # VSCode-specific files
 .vscode/
+
+
+tests/
