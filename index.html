@@ -7,12 +7,42 @@
     <link rel="icon" href="images/cookie-logo.ico">
 </head>
 <body>
-    <a href="cardgames/index.html">Card Game Helps</a>
+    <!-- <a href="cardgames/index.html">Card Game Helps</a> -->
     <!-- <a href="videogames/index.html">Video Game Resources</a> -->
-    <nav class="dropdown">
+    <!-- <nav class="dropdown">
         <a href="https://alexanderdombroski.github.io/wdd130/">WDD 130</a>
         <a href="https://alexanderdombroski.github.io/wdd131/">WDD 131</a>
-    </nav>
-    <p>ToDo: Add Page/Section where a random dad/chuck-norris joke appears from an API</p>
+    </nav> -->
+    <div class="intro">
+        <div>
+            <h1>Hi, I'm Alex Dombroski</h1>
+            <p>I'll add some cool projects to this site later, but for now, checkout my <a href="https://github.com/alexanderdombroski">Github</a></p>
+        </div>
+        <figure>
+            <img src="./images/alexd.png" alt="Alex Dombroski">
+        </figure>
+    </div>
+    <style>
+        .intro {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            gap: 1rem;
+        }
+        figure {
+            margin: 0;
+            /* border-radius: 50%; */
+            overflow: hidden;
+            max-width: 400px;
+            max-height: 400px;
+            box-shadow: 3px 3px 10px;
+        }
+        img {
+            transform: translate(-15%);
+            overflow-clip-margin: content-box;
+            overflow: clip;
+        }
+    </style>
 </body>
 </html>
