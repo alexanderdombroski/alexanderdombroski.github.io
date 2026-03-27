@@ -1,0 +1,8 @@
+# Apple
+.DS_Store
+
+# VSCode-specific files
+.vscode/
+
+
+tests/
