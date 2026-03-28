@@ -4,10 +4,12 @@ import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, fontProviders } from "astro/config";
 
+import svelte from "@astrojs/svelte";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://alexdombroski.com",
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap(), svelte()],
   fonts: [
     {
       provider: fontProviders.local(),
