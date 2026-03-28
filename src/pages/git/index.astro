@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,8 +10,6 @@
       href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="effect.js" defer></script>
   </head>
   <body>
     <header>
@@ -41,7 +39,7 @@
 
         <article>
           <h2>Configuration</h2>
-          <div class="two">
+          <div>
             <p class="small">git config --global [option] [value]</p>
             <p class="small">git config --local [option] [value]</p>
           </div>
@@ -82,7 +80,7 @@
           </p>
         </article>
 
-        <article>
+        <article class="repo-setup">
           <h2>Repo Setup</h2>
           <div class="two">
             <div>
@@ -93,12 +91,9 @@
           </div>
           <p><span class="command">git init</span> creates a brand new repo</p>
           <p>
-            <span class="command">git clone</span> creates a local branch of an
-            existing repository
+            <span class="command">git clone</span> creates a local branch of an existing
+            repository
           </p>
-        </article>
-        <article id="help2" hidden>
-          <p>Check <a href="https://git-scm.com/doc">https://git-scm.com/doc</a> or run <span class="command">git help [command]</span> for more information about commands</p>
         </article>
 
         <article>
@@ -113,16 +108,16 @@
             <p>git commit -m "[message]"</p>
           </div>
           <p>
-            <span class="command">git diff</span> shows changes not yet staged
-            or commited
+            <span class="command">git diff</span> shows changes not yet staged or
+            commited
           </p>
           <p>
-            <span class="command">git add .</span> will stage all files for the
-            next commit.
+            <span class="command">git add .</span> will stage all files for the next
+            commit.
           </p>
           <p>
-            <span class="command">git commit --amend</span> modifies the last
-            commit (don't use on already merged/pushed commits)
+            <span class="command">git commit --amend</span> modifies the last commit
+            (don't use on already merged/pushed commits)
           </p>
           <p>
             <span class="command">git reset [file]</span> is the "undo" to add
@@ -163,8 +158,8 @@
         <article>
           <h2>Useful Files</h2>
           <p>
-            <strong>.gitignore</strong> choose files to be ignored by git such
-            as <span class="command">.env</span>,
+            <strong>.gitignore</strong> choose files to be ignored by git such as
+            <span class="command">.env</span>,
             <span class="command">logs/</span>,
             <span class="command">dist/</span>, or a
             <span class="command">pattern*/</span>
@@ -181,7 +176,11 @@
         </article>
 
         <article id="help">
-          <p>Check <a href="https://git-scm.com/doc">https://git-scm.com/doc</a> or run <span class="command">git help [command]</span> for more information about commands</p>
+          <p>
+            Check <a href="https://git-scm.com/doc">https://git-scm.com/doc</a> or
+            run <span class="command">git help [command]</span> for more information
+            about commands
+          </p>
         </article>
       </section>
 
@@ -198,8 +197,7 @@
           </div>
           <p>
             Use <span class="command">-c</span> or
-            <span class="command">-b</span> to create a new branch before
-            moving.
+            <span class="command">-b</span> to create a new branch before moving.
           </p>
         </article>
 
@@ -214,20 +212,20 @@
             <p>git rebase [from-branch]</p>
           </div>
           <p>
-            <span class="command">git branch -D [from-branch]</span> optionally
-            to delete branch after merge
+            <span class="command">git branch -D [from-branch]</span> optionally to
+            delete branch after merge
           </p>
 
           <h3>Resolving Conflicts</h3>
           <p>
             While rebasing/merging, use the
-            <span class="command">--continue</span> to finish merging after
-            resolving conflicts
+            <span class="command">--continue</span> to finish merging after resolving
+            conflicts
           </p>
           <p>
             While rebasing/merging, use the
-            <span class="command">--abort</span> to give up after failing to
-            resolve conflicts
+            <span class="command">--abort</span> to give up after failing to resolve
+            conflicts
           </p>
         </article>
 
@@ -249,13 +247,12 @@
             <p>git push [remote] [branch]</p>
           </div>
           <p>
-            <span class="command">git push -u [remote] [branch]</span> Sets the
-            upstream for future pushes so the command can be run in the future
-            with only git push
+            <span class="command">git push -u [remote] [branch]</span> Sets the upstream
+            for future pushes so the command can be run in the future with only git
+            push
           </p>
           <p>
-            <span class="command">git push --force</span> overwrites the remote
-            branch
+            <span class="command">git push --force</span> overwrites the remote branch
           </p>
 
           <p>
@@ -276,8 +273,7 @@
             </div>
           </div>
           <p>
-            <span class="command">git pull --rebase</span> to avoid merge
-            commits
+            <span class="command">git pull --rebase</span> to avoid merge commits
           </p>
         </article>
 
@@ -287,11 +283,11 @@
             <p>git stash</p>
             <p>git stash push -m "[message]"</p>
             <p>git stash pop</p>
-            <p>git stash pop stash@{#}</p>
+            <p>git stash pop stash@{'{#}'}</p>
           </div>
           <p>
-            <span class="command">git stash -u</span> to also stash away
-            untracked files
+            <span class="command">git stash -u</span> to also stash away untracked
+            files
           </p>
           <p class="ul-title">Times when stashing is useful:</p>
           <ul>
@@ -300,15 +296,15 @@
             <li>Testing different sets of changes</li>
           </ul>
           <p>
-            <span class="command">git stash apply</span> applys a stash without
-            deleteing it like <span class="command">pop</span>
+            <span class="command">git stash apply</span> applys a stash without deleteing
+            it like <span class="command">pop</span>
           </p>
           <p>
             <span class="command">git stash list</span> shows the stash stack
           </p>
           <p>
             <span class="command">git stash pop</span> will run
-            <span class="command">git stash pop stash@{0}</span> by defualt
+            <span class="command">git stash pop stash@{'{0}'}</span> by defualt
           </p>
           <p>
             <span class="command">git stash drop</span> deletes the latest stash
@@ -322,12 +318,11 @@
         <article>
           <h2>Deleting Files</h2>
           <p>
-            <span class="command">git clean -fd</span> remove all untracked
-            files or specify a pattern
+            <span class="command">git clean -fd</span> remove all untracked files
+            or specify a pattern
           </p>
           <p>
-            Use the <span class="command">-n</span> flag to preview files to be
-            deleted
+            Use the <span class="command">-n</span> flag to preview files to be deleted
           </p>
           <p>
             <span class="command">-X</span> removes ignored files and
@@ -338,3 +333,238 @@
     </main>
   </body>
 </html>
+
+<script>
+  // Create a spotlight element
+  const spotlight = document.createElement('div');
+  spotlight.classList.add('spotlight');
+  document.body.appendChild(spotlight);
+
+  // Update the spotlight position based on mouse movement
+  document.body.addEventListener('mousemove', (e) => {
+    // Use pageX and pageY to account for scrolling
+    const x = e.pageX;
+    const y = e.pageY;
+
+    spotlight.style.top = `${y}px`; // Center spotlight vertically
+    spotlight.style.left = `${x}px`; // Center spotlight horizontally
+  });
+
+  document.body.addEventListener('mouseleave', () => {
+    spotlight.style.opacity = '0'; // Hide spotlight when leaving the document.body
+  });
+
+  document.body.addEventListener('mouseenter', () => {
+    spotlight.style.opacity = '1'; // Show spotlight when entering the document.body
+  });
+</script>
+
+<style>
+  :root {
+    --primary-dark-color: #222823;
+    --secondary-dark-color: #3b453c;
+    --primary-light-color: #e1e2ff;
+    --accent1-color: #99ff15;
+    --accent2-color: #99ff15;
+
+    --spotlight-gap: 3px;
+  }
+
+  body {
+    font-family:
+      'Ubuntu Mono', system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue',
+      sans-serif;
+    background-color: var(--primary-dark-color);
+    margin: 0;
+    padding: var(--spotlight-gap);
+    padding-top: 0px;
+  }
+
+  header > span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  a:link,
+  a:visited,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  li {
+    color: var(--primary-light-color);
+  }
+
+  a {
+    display: block;
+    color: black;
+  }
+
+  p {
+    margin: 10px auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family:
+      'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans',
+      Arial, sans-serif;
+  }
+
+  h2 {
+    border-bottom: 3px var(--secondary-dark-color) dashed;
+    margin-bottom: 15px;
+    margin-top: 10px;
+  }
+
+  h2.small {
+    font-size: 20px;
+  }
+
+  p.small {
+    font-size: 9px;
+  }
+
+  ul {
+    margin-top: 0px;
+    padding-left: 30px;
+  }
+
+  main {
+    gap: var(--spotlight-gap);
+  }
+
+  article,
+  header {
+    background-color: var(--primary-dark-color);
+    border-radius: 5px;
+    padding: 1px;
+    margin: var(--spotlight-gap) 0px;
+    padding-bottom: 10px;
+  }
+  header {
+    margin: 0;
+  }
+
+  div > p {
+    background-color: var(--primary-dark-color);
+    margin: 0;
+    line-height: 25px;
+    height: 100%;
+    align-content: center;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  div {
+    display: grid;
+    margin: 10px auto;
+    text-align: center;
+    align-items: center;
+    column-gap: 2px;
+    row-gap: 2px;
+
+    border: 2px solid var(--secondary-dark-color);
+    border-radius: 10px;
+    background-color: var(--secondary-dark-color);
+
+    overflow: hidden;
+  }
+
+  div > div {
+    border: none;
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+  }
+  .left {
+    grid-template-columns: 2fr 3fr;
+  }
+
+  .span {
+    grid-column-end: span 2;
+  }
+
+  .command {
+    background-color: var(--secondary-dark-color);
+    color: var(--accent1-color);
+    padding: 2px 3px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  .ul-title {
+    margin-bottom: 5px;
+  }
+
+  p:has(+ a) {
+    margin-bottom: 5px;
+  }
+
+  #help a {
+    display: inline;
+  }
+
+  :global(.spotlight) {
+    z-index: -1;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent1-color);
+    pointer-events: none; /* Makes it unclickable */
+    box-shadow: 0 0 20px 50px var(--accent1-color);
+  }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    @page {
+      margin: 0;
+      padding: 20px;
+    }
+    div {
+      page-break-inside: avoid;
+    }
+
+    .break {
+      page-break-before: always;
+    }
+
+    a {
+      text-underline-offset: 4px;
+    }
+    main {
+      gap: 10px;
+    }
+    :global(.spotlight) {
+      display: none;
+    }
+    .repo-setup {
+      margin-bottom: 10px;
+    }
+    #help {
+      display: none;
+    }
+  }
+</style>
