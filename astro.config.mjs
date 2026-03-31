@@ -17,7 +17,7 @@ export default defineConfig({
     {
       provider: fontProviders.local(),
       name: 'Atkinson',
-      cssVariable: '--font',
+      cssVariable: '--base-font',
       fallbacks: ['sans-serif'],
       options: {
         variants: [
@@ -35,6 +35,12 @@ export default defineConfig({
           },
         ],
       },
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Datatype',
+      cssVariable: '--logo-font',
+      fallbacks: ['Cambria'],
     },
   ],
 });
