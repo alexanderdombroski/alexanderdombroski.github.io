@@ -1,0 +1,36 @@
+---
+type Props = {
+  icon: string;
+  type?: 'fill' | 'outline';
+  width?: string;
+  height?: string;
+};
+const { icon, type = 'fill', width, height }: Props = Astro.props;
+
+const icons = import.meta.glob('/node_modules/eva-icons/*/svg/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const key = `/node_modules/eva-icons/${type}/svg/${icon}.svg`;
+const svg = icons[key];
+---
+
+{
+  svg ? (
+    <span
+      style={`width: ${width ?? '32px'}; height: ${height ?? width ?? '32px'};`}
+      set:html={svg}
+    />
+  ) : (
+    <span>Icon not found</span>
+  )
+}
+
+<style>
+  span {
+    display: block;
+    fill: currentColor;
+  }
+</style>
