@@ -15,9 +15,11 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint src",
+    "check-types": "tsc --noEmit && astro check && svelte-check",
     "prepare": "husky"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
@@ -39,6 +41,7 @@
     "prettier-plugin-svelte": "^3.5.1",
     "sharp": "^0.34.5",
     "svelte": "^5.55.0",
+    "svelte-check": "^4.4.6",
     "svelte-eslint-parser": "^1.6.0",
     "typescript": "^5.9.3"
   },
