@@ -1,3 +1,3 @@
-@import './base/normalize.css';
+@import 'https://unpkg.com/@csstools/normalize.css';
 @import './base/typography.css';
 @import './base/global.css';
