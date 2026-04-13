@@ -1,0 +1,135 @@
+---
+import { Octokit } from 'octokit';
+import { getSecret } from 'astro:env/server';
+
+const octokit = new Octokit({
+  auth: getSecret('GITHUB_TOKEN'),
+});
+
+type PR = {
+  owner: string;
+  repo: string;
+  id: number;
+};
+
+const prs: PR[] = [
+  { owner: 'withastro', repo: 'astro', id: 16128 },
+  { owner: 'withastro', repo: 'astro', id: 15943 },
+  { owner: 'microsoft', repo: 'vscode', id: 302322 },
+];
+
+const fetchPrData = async ({ owner, repo, id }: PR) => {
+  const { data } = await octokit.request(
+    'GET /repos/{owner}/{repo}/pulls/{pull_number}',
+    {
+      owner,
+      repo,
+      pull_number: id,
+    },
+  );
+  return data;
+};
+
+const prdata = await Promise.all(prs.map(fetchPrData));
+---
+
+<h1>Open Source Contributions</h1>
+
+<div class="grid">
+  {
+    prdata.map((pr) => {
+      const status = pr.merged_at
+        ? 'merged'
+        : pr.state === 'closed'
+          ? 'closed'
+          : 'open';
+
+      return (
+        <a href={pr.html_url} target="_blank">
+          <div class="card">
+            <div class="repo">{pr.base.repo.full_name}</div>
+
+            <div class="title">{pr.title}</div>
+
+            <div class="meta">
+              <span>#{pr.number}</span>
+
+              <span class={`badge ${status}`}>{status}</span>
+            </div>
+          </div>
+        </a>
+      );
+    })
+  }
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.25rem;
+    background: white;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  .repo {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    font-size: 0.8rem;
+  }
+
+  .badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .open {
+    background: #ecfeff;
+    color: #0891b2;
+  }
+
+  .merged {
+    background: #ecfdf5;
+    color: #059669;
+  }
+
+  .closed {
+    background: #fef2f2;
+    color: #dc2626;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
