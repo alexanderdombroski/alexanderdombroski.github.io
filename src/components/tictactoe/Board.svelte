@@ -1,7 +1,6 @@
 <script lang="ts">
-  import Space from "./Space.svelte";
+  import Space from './Space.svelte';
 </script>
-
 
 <div class="board">
   <Space row={0} column={0} />
@@ -18,7 +17,12 @@
 <style>
   .board {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    max-width: 18rem;
+    grid-template-columns: repeat(3, 6rem);
+    gap: 0.25rem;
+
+    padding: 0.5rem;
+    background-color: #333;
+    border-radius: 0.5rem;
+    width: fit-content;
   }
 </style>
