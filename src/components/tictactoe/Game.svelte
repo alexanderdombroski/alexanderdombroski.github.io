@@ -1,6 +1,6 @@
 <script lang="ts">
   import Board from "./Board.svelte";
-import { gameData } from "./data.svelte";
+    import { gameData } from "./data.svelte";
 
 </script>
 
@@ -11,6 +11,8 @@ import { gameData } from "./data.svelte";
 {:else}
 <p>Player <span>{gameData.turn}</span>'s turn!</p>
 {/if}
+
+<button onclick={gameData.reset()}>Reset</button>
 
 <style>
     span {

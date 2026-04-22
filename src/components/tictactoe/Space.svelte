@@ -15,9 +15,14 @@
     }
 
     const value = $derived(gameData.board[row][column]);
+    const isWinner = $derived(
+    gameData.winningCells?.some(
+        ([r, c]) => r === row && c === column
+    )
+    );
 </script>
 
-<button onclick={handleSelect}>
+<button class:winner={isWinner} onclick={handleSelect}>
     {value ?? ''}
 </button>
 
@@ -25,5 +30,9 @@
     button {
         width: 6rem;
         height: 6rem;
+
+        &.winner {
+            background-color: greenyellow;
+        }
     }
 </style>
