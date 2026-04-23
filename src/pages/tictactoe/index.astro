@@ -1,20 +1,19 @@
 ---
 import Game from '../../components/tictactoe/Game.svelte';
+import EmptyLayout from '../../layouts/EmptyLayout.astro';
 ---
 
-<body>
+<EmptyLayout
+  title="Tic Tac Toe"
+  description="I'm sure you've played this game before and don't need it explained."
+>
   <h1>Tic Tac Toe</h1>
   <Game client:load />
-</body>
+</EmptyLayout>
 
 <style>
-  body {
-    height: 100vh;
-    align-content: center;
-
-    h1 {
-      text-align: center;
-      font-family: 'Courier New', Courier, monospace;
-    }
+  h1 {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
   }
 </style>
