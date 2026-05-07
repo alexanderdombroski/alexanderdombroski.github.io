@@ -1,12 +1,11 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
 import astro from 'eslint-plugin-astro';
 import svelte from 'eslint-plugin-svelte';
 import svelteParser from 'svelte-eslint-parser';
 import * as mdx from 'eslint-plugin-mdx';
+import { parser as tsParser, plugin as tsPlugin } from 'typescript-eslint';
 
 /**
  * @type {import("eslint").ESLint.Plugin}
@@ -84,7 +83,7 @@ export default defineConfig([
       ecmaVersion: 2017,
     },
     plugins: {
-      '@typescript-eslint': typescriptEslint,
+      '@typescript-eslint': tsPlugin,
     },
     rules: {
       eqeqeq: 'warn',

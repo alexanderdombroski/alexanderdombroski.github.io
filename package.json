@@ -25,8 +25,6 @@
     "@astrojs/sitemap": "^3.7.2",
     "@astrojs/svelte": "^8.1.0",
     "@eslint/js": "^10.0.1",
-    "@typescript-eslint/eslint-plugin": "^8.59.1",
-    "@typescript-eslint/parser": "^8.59.1",
     "astro": "^6.2.1",
     "eslint": "^10.3.0",
     "eslint-mdx": "^3.7.0",
@@ -44,7 +42,8 @@
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.7",
     "svelte-eslint-parser": "^1.6.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.2"
   },
   "dependencies": {
     "eva-icons": "^1.1.3"
