@@ -18,6 +18,11 @@ const noStaticSvelte = {
     'no-static-svelte': {
       meta: {
         type: 'problem',
+        schema: [],
+        messages: {
+          missingDirective:
+            'Svelte component "{{name}}" is missing a client directive',
+        },
       },
       create(context) {
         const svelteComponents = new Set();
@@ -25,17 +30,22 @@ const noStaticSvelte = {
 
         return {
           ImportDeclaration(node) {
-            if (node.source.value.endsWith('.svelte')) {
+            if (node.source?.value?.endsWith('.svelte')) {
               node.specifiers.forEach((specifier) => {
                 svelteComponents.add(specifier.local.name);
               });
             }
           },
           JSXOpeningElement(node) {
+            if (node.name.type !== 'JSXIdentifier') return;
             const name = node.name.name;
             if (!svelteComponents.has(name)) return;
             const hasClientDirective = node.attributes.some((attr) => {
               return (
+                !(
+                  attr.type !== 'JSXAttribute' ||
+                  attr.name.type !== 'JSXNamespacedName'
+                ) &&
                 attr.name.namespace?.name === 'client' &&
                 validProperties.has(attr.name.name?.name)
               );
