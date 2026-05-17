@@ -41,7 +41,6 @@
     "sharp": "^0.34.5",
     "svelte": "^5.55.7",
     "svelte-check": "^4.4.8",
-    "svelte-eslint-parser": "^1.6.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.3"
   },

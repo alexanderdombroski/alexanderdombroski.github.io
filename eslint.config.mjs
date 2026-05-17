@@ -3,7 +3,6 @@ import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import astro from 'eslint-plugin-astro';
 import svelte from 'eslint-plugin-svelte';
-import svelteParser from 'svelte-eslint-parser';
 import * as mdx from 'eslint-plugin-mdx';
 import { parser as tsParser, plugin as tsPlugin } from 'typescript-eslint';
 
@@ -121,17 +120,5 @@ export default defineConfig([
       'custom/no-static-svelte': 'warn',
     },
   },
-  {
-    files: ['**/*.svelte', '**/*.svelte.ts'],
-    languageOptions: {
-      globals: globals.browser,
-      parser: svelteParser,
-      parserOptions: {
-        parser: tsParser,
-      },
-    },
-    rules: {
-      ...svelte.configs.recommended.rules,
-    },
-  },
+  ...svelte.configs.recommended,
 ]);
