@@ -6,15 +6,24 @@ const octokit = new Octokit({
   auth: getSecret('GITHUB_TOKEN'),
 });
 
-type PR = {
+type Contribution = {
   owner: string;
   repo: string;
   id: number;
 };
 
-const prs: PR[] = [
-  { owner: 'withastro', repo: 'astro', id: 16128 },
-  { owner: 'withastro', repo: 'astro', id: 15943 },
+const ASTRO = { owner: 'withastro', repo: 'astro' };
+const VS_CODE = { owner: 'microsoft', repo: 'vscode' };
+
+const issues: Contribution[] = [
+  { ...VS_CODE, id: 318402 },
+  { ...VS_CODE, id: 307819 },
+];
+
+const prs: Contribution[] = [
+  { ...ASTRO, id: 16762 },
+  { ...ASTRO, id: 16128 },
+  { ...ASTRO, id: 15943 },
   { owner: 'microsoft', repo: 'vscode', id: 302322 },
   {
     owner: 'material-extensions',
@@ -23,7 +32,7 @@ const prs: PR[] = [
   },
 ];
 
-const fetchPrData = async ({ owner, repo, id }: PR) => {
+const fetchPrData = async ({ owner, repo, id }: Contribution) => {
   const { data } = await octokit.request(
     'GET /repos/{owner}/{repo}/pulls/{pull_number}',
     {
@@ -34,15 +43,28 @@ const fetchPrData = async ({ owner, repo, id }: PR) => {
   );
   return data;
 };
+const fetchIssueData = async ({ owner, repo, id }: Contribution) => {
+  const { data } = await octokit.request(
+    'GET /repos/{owner}/{repo}/issues/{issue_number}',
+    {
+      owner,
+      repo,
+      issue_number: id,
+    },
+  );
+  return data;
+};
 
-const prdata = await Promise.all(prs.map(fetchPrData));
+const prData = await Promise.all(prs.map(fetchPrData));
+const isueData = await Promise.all(prs.map(fetchIssueData));
 ---
 
+<!-- https://astro.badg.es/contributor/alexanderdombroski/ -->
 <h1>Open Source Contributions</h1>
 
 <div class="grid">
   {
-    prdata.map((pr) => {
+    prData.map((pr) => {
       const status = pr.merged_at
         ? 'merged'
         : pr.state === 'closed'
