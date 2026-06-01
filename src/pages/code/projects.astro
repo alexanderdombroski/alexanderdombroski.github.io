@@ -90,6 +90,7 @@ const { default: projects } =
   };
 
 const initialProjects = projects.filter((repo) => !repo.fork);
+const forkProjects = projects.filter((repo) => repo.fork);
 const initialLanguages = [
   ...new Set(initialProjects.flatMap((repo) => repo.languageNames)),
 ].sort((a, b) => a.localeCompare(b));
@@ -169,15 +170,14 @@ const visibleProjectCount = initialProjects.length;
           <p>Cards stay readable even without JavaScript enabled.</p>
         </div>
 
-        <div class="grid">
+        <div class="grid" data-project-grid>
           {
-            projects.map((repo) => (
+            initialProjects.map((repo) => (
               <article
                 class="card"
                 data-repo-card
                 data-repo-full-name={repo.full_name}
                 data-is-fork={String(repo.fork)}
-                hidden={repo.fork ? true : undefined}
               >
                 <div class="card-top">
                   <div>
@@ -229,6 +229,71 @@ const visibleProjectCount = initialProjects.length;
               </article>
             ))
           }
+          {
+            forkProjects.map((repo) => (
+              <template
+                data-fork-card-template
+                data-repo-full-name={repo.full_name}
+              >
+                <article
+                  class="card"
+                  data-repo-card
+                  data-repo-full-name={repo.full_name}
+                  data-is-fork={String(repo.fork)}
+                >
+                  <div class="card-top">
+                    <div>
+                      <p class="repo-name">{repo.name}</p>
+                      <p class="repo-full-name">{repo.full_name}</p>
+                    </div>
+                    <div class="badges">
+                      {repo.fork && <span class="badge muted">Fork</span>}
+                      {repo.archived && (
+                        <span class="badge muted">Archived</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <p class="description">
+                    {repo.description ?? 'No description provided.'}
+                  </p>
+
+                  <div
+                    class="language-list"
+                    aria-label={`Languages used in ${repo.name}`}
+                  >
+                    {repo.languageEntries.length > 0 ? (
+                      repo.languageEntries.map((language) => (
+                        <span class="language-pill">
+                          {language.name}
+                          <span class="language-bytes">
+                            {language.bytes.toLocaleString()}
+                          </span>
+                        </span>
+                      ))
+                    ) : (
+                      <span class="language-pill">Other</span>
+                    )}
+                  </div>
+
+                  <div class="meta">
+                    <span>{repo.stargazers_count} stars</span>
+                    <span>{repo.forks_count} forks</span>
+                    <span>Updated {formatDate(repo.updated_at)}</span>
+                  </div>
+
+                  <a
+                    class="repo-link"
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Open repository
+                  </a>
+                </article>
+              </template>
+            ))
+          }
         </div>
       </section>
     </main>
@@ -236,9 +301,15 @@ const visibleProjectCount = initialProjects.length;
 
     <script is:inline define:vars={{ projects }}>
       const repos = projects;
+      const grid = document.querySelector('[data-project-grid]');
       const filterRow = document.querySelector('[data-filter-row]');
       const forksToggle = document.querySelector('[data-forks-toggle]');
       const status = document.querySelector('[data-filter-status]');
+      const forkTemplates = new Map(
+        Array.from(document.querySelectorAll('[data-fork-card-template]')).map(
+          (template) => [template.dataset.repoFullName, template],
+        ),
+      );
       const cards = new Map(
         Array.from(document.querySelectorAll('[data-repo-card]')).map(
           (card) => [card.dataset.repoFullName, card],
@@ -252,6 +323,34 @@ const visibleProjectCount = initialProjects.length;
 
       const visibleRepos = () =>
         repos.filter((repo) => showForks || !repo.fork);
+
+      const syncForkCards = () => {
+        if (!grid) return;
+
+        for (const repo of repos) {
+          if (!repo.fork) continue;
+
+          const existingCard = cards.get(repo.full_name);
+
+          if (!showForks) {
+            if (existingCard) {
+              existingCard.remove();
+              cards.delete(repo.full_name);
+            }
+            continue;
+          }
+
+          if (existingCard) continue;
+
+          const template = forkTemplates.get(repo.full_name);
+          const card = template?.content.firstElementChild?.cloneNode(true);
+
+          if (!(card instanceof HTMLElement)) continue;
+
+          grid.appendChild(card);
+          cards.set(repo.full_name, card);
+        }
+      };
 
       const availableLanguages = () => {
         const languages = new Set();
@@ -294,6 +393,8 @@ const visibleProjectCount = initialProjects.length;
       };
 
       const applyFilter = () => {
+        syncForkCards();
+
         const languages = availableLanguages();
         const languageSet = new Set(languages.map(normalize));
 
