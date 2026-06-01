@@ -1,0 +1,603 @@
+---
+import { writeFile } from 'node:fs/promises';
+
+import { getSecret } from 'astro:env/server';
+import { Octokit } from 'octokit';
+import BaseHead from '../../components/base/Head.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const octokit = new Octokit({
+  auth: getSecret('GITHUB_TOKEN'),
+});
+
+const owner = 'alexanderdombroski';
+const dataFileUrl = new URL('../../assets/data/projects.json', import.meta.url);
+
+type LanguageEntry = {
+  name: string;
+  bytes: number;
+};
+
+type ProjectRepo = {
+  name: string;
+  full_name: string;
+  html_url: string;
+  description: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  updated_at: string;
+  archived: boolean;
+  fork: boolean;
+  languageEntries: LanguageEntry[];
+  languageNames: string[];
+};
+
+type GitHubRepo = Omit<ProjectRepo, 'languageEntries' | 'languageNames'>;
+
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat('en', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(value));
+
+const repos = (await octokit.paginate('GET /users/{username}/repos', {
+  username: owner,
+  per_page: 100,
+  sort: 'updated',
+  direction: 'desc',
+  type: 'owner',
+})) as GitHubRepo[];
+
+const repoData: ProjectRepo[] = await Promise.all(
+  repos.map(async (repo) => {
+    const { data: languages } = await octokit.request(
+      'GET /repos/{owner}/{repo}/languages',
+      {
+        owner,
+        repo: repo.name,
+      },
+    );
+
+    const languageEntries = Object.entries(languages)
+      .map(([name, bytes]) => ({
+        name,
+        bytes,
+      }))
+      .sort((a, b) => b.bytes - a.bytes);
+
+    const languageNames = languageEntries.length
+      ? languageEntries.map(({ name }) => name)
+      : repo.language
+        ? [repo.language]
+        : ['Other'];
+
+    return {
+      ...repo,
+      languageEntries,
+      languageNames,
+    };
+  }),
+);
+
+await writeFile(dataFileUrl, JSON.stringify(repoData, null, 2));
+
+const { default: projects } =
+  (await import('../../assets/data/projects.json')) as {
+    default: ProjectRepo[];
+  };
+
+const initialProjects = projects.filter((repo) => !repo.fork);
+const initialLanguages = [
+  ...new Set(initialProjects.flatMap((repo) => repo.languageNames)),
+].sort((a, b) => a.localeCompare(b));
+
+const visibleProjectCount = initialProjects.length;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead
+      title="Projects"
+      description="Browse Alex Dombroski's public GitHub repositories with language filters."
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Code</div>
+        <h1>Personal Projects</h1>
+        <p>
+          A public, accessible view of my GitHub repositories. Filter by
+          language, scan the cards, and jump straight to the source.
+        </p>
+        <p class="stats" data-filter-status aria-live="polite">
+          Showing {visibleProjectCount} repositories
+        </p>
+      </section>
+
+      <section aria-labelledby="language-filters" class="filters">
+        <div class="controls">
+          <button
+            class="fork-toggle"
+            type="button"
+            data-forks-toggle
+            aria-pressed="false"
+          >
+            Show forks
+          </button>
+        </div>
+
+        <div class="section-heading">
+          <h2 id="language-filters">Filter by language</h2>
+          <p>
+            By default, forks are hidden. Turning them on also adds fork-only
+            languages to the filter list.
+          </p>
+        </div>
+
+        <div class="filter-row" data-filter-row>
+          <button
+            class="filter-button active"
+            type="button"
+            data-language-filter="all"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          {
+            initialLanguages.map((language) => (
+              <button
+                class="filter-button"
+                type="button"
+                data-language-filter={language}
+                aria-pressed="false"
+              >
+                {language}
+              </button>
+            ))
+          }
+        </div>
+      </section>
+
+      <section aria-labelledby="projects" class="projects">
+        <div class="section-heading">
+          <h2 id="projects">Repositories</h2>
+          <p>Cards stay readable even without JavaScript enabled.</p>
+        </div>
+
+        <div class="grid">
+          {
+            projects.map((repo) => (
+              <article
+                class="card"
+                data-repo-card
+                data-repo-full-name={repo.full_name}
+                data-is-fork={String(repo.fork)}
+                hidden={repo.fork ? true : undefined}
+              >
+                <div class="card-top">
+                  <div>
+                    <p class="repo-name">{repo.name}</p>
+                    <p class="repo-full-name">{repo.full_name}</p>
+                  </div>
+                  <div class="badges">
+                    {repo.fork && <span class="badge muted">Fork</span>}
+                    {repo.archived && <span class="badge muted">Archived</span>}
+                  </div>
+                </div>
+
+                <p class="description">
+                  {repo.description ?? 'No description provided.'}
+                </p>
+
+                <div
+                  class="language-list"
+                  aria-label={`Languages used in ${repo.name}`}
+                >
+                  {repo.languageEntries.length > 0 ? (
+                    repo.languageEntries.map((language) => (
+                      <span class="language-pill">
+                        {language.name}
+                        <span class="language-bytes">
+                          {language.bytes.toLocaleString()}
+                        </span>
+                      </span>
+                    ))
+                  ) : (
+                    <span class="language-pill">Other</span>
+                  )}
+                </div>
+
+                <div class="meta">
+                  <span>{repo.stargazers_count} stars</span>
+                  <span>{repo.forks_count} forks</span>
+                  <span>Updated {formatDate(repo.updated_at)}</span>
+                </div>
+
+                <a
+                  class="repo-link"
+                  href={repo.html_url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Open repository
+                </a>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+    <Footer />
+
+    <script is:inline define:vars={{ projects }}>
+      const repos = projects;
+      const filterRow = document.querySelector('[data-filter-row]');
+      const forksToggle = document.querySelector('[data-forks-toggle]');
+      const status = document.querySelector('[data-filter-status]');
+      const cards = new Map(
+        Array.from(document.querySelectorAll('[data-repo-card]')).map(
+          (card) => [card.dataset.repoFullName, card],
+        ),
+      );
+
+      let showForks = false;
+      let activeLanguage = 'all';
+
+      const normalize = (value) => value.toLowerCase();
+
+      const visibleRepos = () =>
+        repos.filter((repo) => showForks || !repo.fork);
+
+      const availableLanguages = () => {
+        const languages = new Set();
+
+        for (const repo of visibleRepos()) {
+          for (const language of repo.languageNames) {
+            languages.add(language);
+          }
+        }
+
+        return [...languages].sort((a, b) => a.localeCompare(b));
+      };
+
+      const renderFilters = () => {
+        if (!filterRow) return;
+
+        const languages = availableLanguages();
+        const activeKey = normalize(activeLanguage);
+        const buttons = [
+          `<button class="filter-button ${activeLanguage === 'all' ? 'active' : ''}" type="button" data-language-filter="all" aria-pressed="${String(activeLanguage === 'all')}">All</button>`,
+          ...languages.map(
+            (language) => `
+              <button class="filter-button ${normalize(language) === activeKey ? 'active' : ''}" type="button" data-language-filter="${language}" aria-pressed="${String(normalize(language) === activeKey)}">
+                ${language}
+              </button>
+            `,
+          ),
+        ];
+
+        filterRow.innerHTML = buttons.join('');
+
+        for (const button of Array.from(
+          filterRow.querySelectorAll('[data-language-filter]'),
+        )) {
+          button.addEventListener('click', () => {
+            activeLanguage = button.dataset.languageFilter ?? 'all';
+            applyFilter();
+          });
+        }
+      };
+
+      const applyFilter = () => {
+        const languages = availableLanguages();
+        const languageSet = new Set(languages.map(normalize));
+
+        if (
+          activeLanguage !== 'all' &&
+          !languageSet.has(normalize(activeLanguage))
+        ) {
+          activeLanguage = 'all';
+        }
+
+        let visibleCount = 0;
+
+        for (const repo of repos) {
+          const card = cards.get(repo.full_name);
+          if (!card) continue;
+
+          const matchesForkMode = showForks || !repo.fork;
+          const matchesLanguage =
+            activeLanguage === 'all' ||
+            repo.languageNames.some(
+              (language) => normalize(language) === normalize(activeLanguage),
+            );
+
+          const isVisible = matchesForkMode && matchesLanguage;
+          card.toggleAttribute('hidden', !isVisible);
+
+          if (isVisible) visibleCount += 1;
+        }
+
+        if (status) {
+          status.textContent =
+            activeLanguage === 'all'
+              ? `Showing ${visibleCount} repositories`
+              : `Showing ${visibleCount} repositories filtered by ${activeLanguage}`;
+        }
+
+        if (forksToggle) {
+          forksToggle.textContent = showForks ? 'Hide forks' : 'Show forks';
+          forksToggle.setAttribute('aria-pressed', String(showForks));
+        }
+
+        renderFilters();
+      };
+
+      if (forksToggle) {
+        forksToggle.addEventListener('click', () => {
+          showForks = !showForks;
+          applyFilter();
+        });
+      }
+
+      applyFilter();
+    </script>
+  </body>
+</html>
+
+<style>
+  main {
+    width: min(1100px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding-top: 2.25rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero {
+    display: grid;
+    gap: 0.75rem;
+    padding: 2rem 0 1.5rem;
+  }
+
+  .eyebrow {
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgb(var(--gray));
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    max-width: 12ch;
+  }
+
+  .hero p {
+    max-width: 60ch;
+    margin-bottom: 0;
+  }
+
+  .stats {
+    font-weight: 600;
+    color: rgb(var(--gray-dark));
+  }
+
+  .filters,
+  .projects {
+    margin-top: 2.25rem;
+  }
+
+  .section-heading {
+    display: grid;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-heading h2 {
+    font-size: 1.45rem;
+  }
+
+  .section-heading p {
+    margin: 0;
+    color: rgb(var(--gray));
+  }
+
+  .controls {
+    margin-bottom: 1rem;
+  }
+
+  .fork-toggle,
+  .filter-button {
+    appearance: none;
+    border: 1px solid rgb(var(--gray-light));
+    background: rgba(255, 255, 255, 0.85);
+    color: rgb(var(--gray-dark));
+    border-radius: 999px;
+    padding: 0.55rem 0.95rem;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .fork-toggle:hover,
+  .fork-toggle:focus-visible,
+  .filter-button:hover,
+  .filter-button:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: var(--box-shadow);
+    border-color: rgba(var(--gray), 0.35);
+    outline: none;
+  }
+
+  .fork-toggle[aria-pressed='true'],
+  .filter-button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid rgb(var(--gray-light));
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 30px rgba(var(--gray), 0.1);
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      border-color 0.18s ease;
+  }
+
+  .card[hidden] {
+    display: none !important;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--box-shadow);
+    border-color: rgba(var(--gray), 0.32);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .repo-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgb(var(--black));
+  }
+
+  .repo-full-name {
+    margin: 0.15rem 0 0;
+    color: rgb(var(--gray));
+    font-size: 0.9rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: end;
+  }
+
+  .badge {
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(var(--gray-light), 0.5);
+    color: rgb(var(--gray-dark));
+  }
+
+  .badge.muted {
+    background: rgba(var(--gray-light), 0.85);
+  }
+
+  .description {
+    margin: 0;
+    color: rgb(var(--gray-dark));
+    font-size: 0.96rem;
+  }
+
+  .language-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .language-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(var(--gray-light), 0.45);
+    color: rgb(var(--gray-dark));
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .language-bytes {
+    color: rgb(var(--gray));
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: rgb(var(--gray));
+    font-size: 0.82rem;
+  }
+
+  .repo-link {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    text-decoration: none;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+
+  .repo-link:hover,
+  .repo-link:focus-visible {
+    color: white;
+    background: var(--accent-dark);
+  }
+
+  @media (max-width: 720px) {
+    main {
+      width: min(100% - 1rem, 1100px);
+      padding-top: 1.5rem;
+    }
+
+    .hero {
+      padding-top: 1rem;
+    }
+
+    .card-top {
+      flex-direction: column;
+    }
+
+    .badges {
+      justify-content: start;
+    }
+  }
+</style>
