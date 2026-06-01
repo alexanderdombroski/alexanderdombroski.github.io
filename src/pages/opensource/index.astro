@@ -21,10 +21,11 @@ const issues: Contribution[] = [
 ];
 
 const prs: Contribution[] = [
+  { ...VS_CODE, id: 318104 },
   { ...ASTRO, id: 16762 },
   { ...ASTRO, id: 16128 },
   { ...ASTRO, id: 15943 },
-  { owner: 'microsoft', repo: 'vscode', id: 302322 },
+  { ...VS_CODE, id: 302322 },
   {
     owner: 'material-extensions',
     repo: 'vscode-material-icon-theme',
@@ -56,12 +57,15 @@ const fetchIssueData = async ({ owner, repo, id }: Contribution) => {
 };
 
 const prData = await Promise.all(prs.map(fetchPrData));
-const isueData = await Promise.all(prs.map(fetchIssueData));
+const issueData = await Promise.all(issues.map(fetchIssueData));
 ---
 
 <!-- https://astro.badg.es/contributor/alexanderdombroski/ -->
 <h1>Open Source Contributions</h1>
 
+<p>A history of interactions with the open source world</p>
+
+<h2>Pull Requests</h2>
 <div class="grid">
   {
     prData.map((pr) => {
@@ -90,7 +94,40 @@ const isueData = await Promise.all(prs.map(fetchIssueData));
   }
 </div>
 
+<h2>Issues</h2>
+<div class="grid">
+  {
+    issueData.map((issue) => {
+      const status = issue.state === 'closed' ? 'closed' : 'open';
+
+      return (
+        <a href={issue.html_url} target="_blank" rel="noreferrer">
+          <div class="card">
+            <div class="repo">
+              {issue.repository_url.split('/').slice(-2).join('/')}
+            </div>
+
+            <div class="title">{issue.title}</div>
+
+            <div class="meta">
+              <span>#{issue.number}</span>
+
+              <span class={`badge ${status}`}>{status}</span>
+            </div>
+          </div>
+        </a>
+      );
+    })
+  }
+</div>
+
 <style>
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.35rem;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

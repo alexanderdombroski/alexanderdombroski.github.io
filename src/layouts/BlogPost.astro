@@ -11,6 +11,7 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
+<!-- ideas: language list repository overview... do I include private repos? just filter the name? --><!-- ideas: husky, lint-staged, prepare fix in monorepo --><!-- ideas: rust precommit, prepare fix in monorepo -->
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
