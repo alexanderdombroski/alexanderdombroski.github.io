@@ -1,5 +1,6 @@
 ---
 import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import { getSecret } from 'astro:env/server';
 import { Octokit } from 'octokit';
@@ -12,7 +13,7 @@ const octokit = new Octokit({
 });
 
 const owner = 'alexanderdombroski';
-const dataFileUrl = new URL('../../assets/data/projects.json', import.meta.url);
+const dataFilePath = path.join(process.cwd(), 'src/assets/data/projects.json');
 
 type LanguageEntry = {
   name: string;
@@ -82,7 +83,7 @@ const repoData: ProjectRepo[] = await Promise.all(
   }),
 );
 
-await writeFile(dataFileUrl, JSON.stringify(repoData, null, 2));
+await writeFile(dataFilePath, JSON.stringify(repoData, null, 2));
 
 const { default: projects } =
   (await import('../../assets/data/projects.json')) as {
