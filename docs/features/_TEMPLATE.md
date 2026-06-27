@@ -6,7 +6,6 @@ An implementation plan.
 
 | Field                | Value                                                    |
 | -------------------- | -------------------------------------------------------- |
-| **Feature ID**       | {e.g. 1.1}                                               |
 | **Section**          | {e.g. Adaptive Learning Core}                            |
 | **Status (today)**   | MISSING \| PARTIAL \| THIN                               |
 | **Estimated effort** | XS (≤1d) \| S (1w) \| M (2–4w) \| L (1–2mo) \| XL (>2mo) |
