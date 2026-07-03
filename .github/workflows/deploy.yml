@@ -43,12 +43,18 @@ jobs:
 
       - name: Install Dependencies
         run: nub ci
+      - name: Pre-deploy Checks
+        run: |
+          nub run lint
+          nub run check-types
       - name: Run Prebuild
         run: nub scripts/prebuild.ts --ci
         env:
           GITHUB_TOKEN: ${{ secrets.READ_GITHUB_PAT }}
       - name: Run Build
         run: nub run build
+      - name: Run Test
+        run: nub run test
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

@@ -16,6 +16,7 @@
     "astro": "astro",
     "lint": "eslint src",
     "check-types": "tsc --noEmit && astro check && svelte-check",
+    "test": "vitest",
     "prebuild": "nub scripts/prebuild.ts",
     "prepare": "husky"
   },
@@ -43,7 +44,8 @@
     "svelte": "^5.56.4",
     "svelte-check": "^4.7.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.62.1"
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
     "eva-icons": "^1.1.3"
