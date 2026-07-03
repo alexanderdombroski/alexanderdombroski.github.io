@@ -42,7 +42,7 @@ jobs:
           node-version: '24'
 
       - name: Install Dependencies
-        run: nub ci
+        run: npm ci
       - name: Run Build
         run: nub run build # Also runs prebuild
         env:
