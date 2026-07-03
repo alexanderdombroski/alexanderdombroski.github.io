@@ -121,4 +121,10 @@ export default defineConfig([
     },
   },
   ...svelte.configs.recommended,
+  {
+    files: ['scripts/**/*.{ts,js}'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ]);

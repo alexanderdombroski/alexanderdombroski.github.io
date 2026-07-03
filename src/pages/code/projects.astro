@@ -1,19 +1,7 @@
 ---
-import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
-
-import { getSecret } from 'astro:env/server';
-import { Octokit } from 'octokit';
 import BaseHead from '../../components/base/Head.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-
-const octokit = new Octokit({
-  auth: getSecret('GITHUB_TOKEN'),
-});
-
-const owner = 'alexanderdombroski';
-const dataFilePath = path.join(process.cwd(), 'src/assets/data/projects.json');
 
 type LanguageEntry = {
   name: string;
@@ -35,55 +23,12 @@ type ProjectRepo = {
   languageNames: string[];
 };
 
-type GitHubRepo = Omit<ProjectRepo, 'languageEntries' | 'languageNames'>;
-
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('en', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   }).format(new Date(value));
-
-const repos = (await octokit.paginate('GET /users/{username}/repos', {
-  username: owner,
-  per_page: 100,
-  sort: 'updated',
-  direction: 'desc',
-  type: 'owner',
-})) as GitHubRepo[];
-
-const repoData: ProjectRepo[] = await Promise.all(
-  repos.map(async (repo) => {
-    const { data: languages } = await octokit.request(
-      'GET /repos/{owner}/{repo}/languages',
-      {
-        owner,
-        repo: repo.name,
-      },
-    );
-
-    const languageEntries = Object.entries(languages)
-      .map(([name, bytes]) => ({
-        name,
-        bytes,
-      }))
-      .sort((a, b) => b.bytes - a.bytes);
-
-    const languageNames = languageEntries.length
-      ? languageEntries.map(({ name }) => name)
-      : repo.language
-        ? [repo.language]
-        : ['Other'];
-
-    return {
-      ...repo,
-      languageEntries,
-      languageNames,
-    };
-  }),
-);
-
-await writeFile(dataFilePath, JSON.stringify(repoData, null, 2));
 
 const { default: projects } =
   (await import('../../assets/data/projects.json')) as {

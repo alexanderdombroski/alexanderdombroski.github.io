@@ -16,6 +16,7 @@
     "astro": "astro",
     "lint": "eslint src",
     "check-types": "tsc --noEmit && astro check && svelte-check",
+    "prebuild": "nub scripts/prebuild.ts",
     "prepare": "husky"
   },
   "devDependencies": {
