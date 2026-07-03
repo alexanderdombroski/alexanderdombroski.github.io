@@ -120,7 +120,18 @@ export default defineConfig([
       'custom/no-static-svelte': 'warn',
     },
   },
-  ...svelte.configs.recommended,
+  ...svelte.configs['flat/recommended'],
+  {
+    files: ['**/*.svelte', '**/*.svelte.ts'],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: ['.svelte'],
+        parser: tsParser,
+      },
+      globals: globals.browser,
+    },
+  },
   {
     files: ['scripts/**/*.{ts,js}'],
     languageOptions: {
