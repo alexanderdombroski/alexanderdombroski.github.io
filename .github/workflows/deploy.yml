@@ -34,16 +34,18 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: nubjs/setup-nub@v0
         with:
           node-version: '24'
 
       - name: Install Dependencies
-        run: npm install
-      - name: Run Build
-        run: npm run build
+        run: nub ci
+      - name: Run Prebuild
+        run: nub scripts/prebuild.ts --ci
         env:
           GITHUB_TOKEN: ${{ secrets.READ_GITHUB_PAT }}
+      - name: Run Build
+        run: nub run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
