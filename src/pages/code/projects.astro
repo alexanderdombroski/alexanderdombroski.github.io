@@ -230,19 +230,22 @@ const visibleProjectCount = initialProjects.length;
       const status = document.querySelector('[data-filter-status]');
       const forkTemplates = new Map(
         Array.from(document.querySelectorAll('[data-fork-card-template]')).map(
-          (template) => [template.dataset.repoFullName, template],
+          (template) => [
+            (template as HTMLDataElement).dataset.repoFullName,
+            template,
+          ],
         ),
       );
       const cards = new Map(
         Array.from(document.querySelectorAll('[data-repo-card]')).map(
-          (card) => [card.dataset.repoFullName, card],
+          (card) => [(card as HTMLDataElement).dataset.repoFullName, card],
         ),
       );
 
       let showForks = false;
       let activeLanguage = 'all';
 
-      const normalize = (value) => value.toLowerCase();
+      const normalize = (value: string) => value.toLowerCase();
 
       const visibleRepos = () =>
         repos.filter((repo) => showForks || !repo.fork);
@@ -266,6 +269,7 @@ const visibleProjectCount = initialProjects.length;
           if (existingCard) continue;
 
           const template = forkTemplates.get(repo.full_name);
+          // @ts-ignore
           const card = template?.content.firstElementChild?.cloneNode(true);
 
           if (!(card instanceof HTMLElement)) continue;
@@ -276,7 +280,7 @@ const visibleProjectCount = initialProjects.length;
       };
 
       const availableLanguages = () => {
-        const languages = new Set();
+        const languages = new Set<string>();
 
         for (const repo of visibleRepos()) {
           for (const language of repo.languageNames) {
@@ -309,7 +313,8 @@ const visibleProjectCount = initialProjects.length;
           filterRow.querySelectorAll('[data-language-filter]'),
         )) {
           button.addEventListener('click', () => {
-            activeLanguage = button.dataset.languageFilter ?? 'all';
+            activeLanguage =
+              (button as HTMLDataElement).dataset.languageFilter ?? 'all';
             applyFilter();
           });
         }
