@@ -6,7 +6,14 @@
     "url": "https://alexdombroski.com"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=24.18.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=24.18.0",
+      "onFail": "warn"
+    }
   },
   "scripts": {
     "dev": "astro dev",
