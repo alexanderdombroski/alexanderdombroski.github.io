@@ -110,9 +110,16 @@ export default defineConfig([
     },
   },
   { ...mdx.flatCodeBlocks },
-  ...astro.configs.recommended,
+  ...astro.configs['flat/recommended'],
   {
     files: ['**/*.astro', '**/*.mdx'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        extraFileExtensions: ['.astro'],
+        parser: tsParser,
+      },
+    },
     plugins: {
       custom: noStaticSvelte,
     },

@@ -2,26 +2,7 @@
 import BaseHead from '../../components/base/Head.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-
-type LanguageEntry = {
-  name: string;
-  bytes: number;
-};
-
-type ProjectRepo = {
-  name: string;
-  full_name: string;
-  html_url: string;
-  description: string | null;
-  stargazers_count: number;
-  forks_count: number;
-  language: string | null;
-  updated_at: string;
-  archived: boolean;
-  fork: boolean;
-  languageEntries: LanguageEntry[];
-  languageNames: string[];
-};
+import projects from '../../assets/data/projects.json';
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('en', {
@@ -29,11 +10,6 @@ const formatDate = (value: string) =>
     day: 'numeric',
     year: 'numeric',
   }).format(new Date(value));
-
-const { default: projects } =
-  (await import('../../assets/data/projects.json')) as {
-    default: ProjectRepo[];
-  };
 
 const initialProjects = projects.filter((repo) => !repo.fork);
 const forkProjects = projects.filter((repo) => repo.fork);
@@ -245,7 +221,8 @@ const visibleProjectCount = initialProjects.length;
     </main>
     <Footer />
 
-    <script is:inline define:vars={{ projects }}>
+    <script>
+      import projects from '../../assets/data/projects.json';
       const repos = projects;
       const grid = document.querySelector('[data-project-grid]');
       const filterRow = document.querySelector('[data-filter-row]');
