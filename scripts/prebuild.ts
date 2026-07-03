@@ -6,12 +6,11 @@ import { loadEnvFile } from 'node:process';
 
 type CacheManifest = Record<string, string>; // key → ISO timestamp
 
-const isCI = process.argv.includes('--ci');
-if (!isCI) {
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+if (!GITHUB_TOKEN) {
   loadEnvFile(path.join(import.meta.dirname, '..', '.env'));
 }
-
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 if (!GITHUB_TOKEN) {
   throw new Error('Failed to load GITHUB_TOKEN');
