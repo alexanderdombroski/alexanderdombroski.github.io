@@ -1,3 +1,14 @@
-@import 'https://unpkg.com/@csstools/normalize.css';
-@import './base/typography.css';
-@import './base/global.css';
+/* 
+ * CSS architecture created following suggestions of 
+ * [CUBE CSS](https://cube.fyi/#what-does-cube-css-stand-for)
+ */
+
+@import 'https://unpkg.com/@csstools/normalize.css' layer(base);
+@import 'base/typography.css' layer(base);
+@import 'base/global.css' layer(base);
+
+@layer base, layout, components, utilities;
+
+@import 'components/button.css' layer(components);
+
+/* @import "utilities/utilities.css" layer(utilities); */
