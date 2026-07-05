@@ -1,4 +1,4 @@
-import { randomChoice } from '../../utils/random';
+import { randomChoice } from '../../../utils/random';
 
 type Token = 'X' | 'O';
 type Space = Token | null;
