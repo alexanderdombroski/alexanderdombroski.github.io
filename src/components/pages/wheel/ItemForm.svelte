@@ -147,8 +147,8 @@
     border: 1px solid #e2e2e2;
     border-radius: 0.75rem;
     padding: 1.25rem;
-    min-width: 240px;
-    max-width: 300px;
+    min-width: 320px;
+    max-width: min(460px, 90vw);
     width: 100%;
   }
 
@@ -187,25 +187,29 @@
   .input-row {
     display: flex;
     gap: 0.5rem;
-  }
 
-  input {
-    flex: 1;
-    padding: 0.55rem 0.75rem;
-    font-size: 0.9rem;
-    background: #f5f5f5;
-    border: 1px solid #d1d1d1;
-    border-radius: 0.4rem;
-    color: #111;
-    outline: none;
-    font-family: inherit;
-    transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
-  }
+    input {
+      flex: 1;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.9rem;
+      background: #f5f5f5;
+      border: 1px solid #d1d1d1;
+      border-radius: 0.4rem;
+      color: #111;
+      outline: none;
+      font-family: inherit;
+      transition:
+        border-color 0.15s,
+        box-shadow 0.15s;
+    }
 
-  input::placeholder {
-    color: #aaa;
+    input::placeholder {
+      color: #aaa;
+    }
+
+    .btn {
+      font-size: 1.1rem;
+    }
   }
 
   input:focus {

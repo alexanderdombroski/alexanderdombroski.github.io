@@ -141,7 +141,7 @@
   <!-- Winner banner -->
   {#if winnerVisible}
     <div class="winner-banner" aria-live="polite">
-      <span class="winner-label">Winner:</span>
+      <span class="winner-label">Selected:</span>
       <span class="winner-name">{winner}</span>
     </div>
   {/if}
@@ -173,8 +173,8 @@
   /* ── Wheel ── */
   .wheel-wrap {
     position: relative;
-    width: min(400px, 88vw);
-    height: min(400px, 88vw);
+    width: min(560px, 88vw);
+    height: min(560px, 88vw);
     display: flex;
     align-items: center;
     justify-content: center;

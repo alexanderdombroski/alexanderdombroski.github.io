@@ -21,13 +21,16 @@
 </script>
 
 <div class="wheel-page">
-  <header class="page-header">
-    <h1 class="page-title">Spin the Wheel</h1>
-    <p class="page-subtitle">Add your options, spin, and let fate decide.</p>
-  </header>
-
   <div class="wheel-layout">
-    <ItemForm />
+    <div>
+      <header class="page-header">
+        <h1 class="page-title">Spin the Wheel</h1>
+        <p class="page-subtitle">
+          Add your options, spin, and let fate decide.
+        </p>
+      </header>
+      <ItemForm />
+    </div>
     <SpinnerWheel />
   </div>
 </div>
@@ -68,6 +71,6 @@
     justify-content: center;
     gap: 2rem;
     width: 100%;
-    max-width: 960px;
+    max-width: 72rem;
   }
 </style>
