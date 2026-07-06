@@ -9,6 +9,7 @@
   let spinning = $state(false);
   let winner = $state('');
   let winnerVisible = $state(false);
+  const hasNoItems = $derived(!items.length);
 
   const COLORS = [
     '#e05c5c',
@@ -29,6 +30,8 @@
   const SPIN_DURATION_MS = 5200;
 
   const sliceAngle = $derived(360 / items.length);
+  const FORMAT_COMPACT = $derived(items.length > 4);
+  const polarModifier = $derived(FORMAT_COMPACT ? 0.5 : 0.65);
 
   function polar(angle: number, r: number) {
     const rad = ((angle - 90) * Math.PI) / 180;
@@ -43,7 +46,7 @@
   }
 
   function spin() {
-    if (spinning || items.length < 2) return;
+    if (spinning || hasNoItems) return;
 
     spinning = true;
     winner = '';
@@ -93,7 +96,7 @@
         />
         <text
           x={CX}
-          y={CY}
+          y={CY - RADIUS * 0.38}
           text-anchor="middle"
           dominant-baseline="middle"
           fill="white"
@@ -114,7 +117,8 @@
           {@const start = i * sliceAngle}
           {@const end = start + sliceAngle}
           {@const mid = start + sliceAngle / 2}
-          {@const pos = polar(mid, RADIUS * 0.65)}
+          {@const rotationAmount = FORMAT_COMPACT ? mid - 90 : mid}
+          {@const pos = polar(mid, RADIUS * polarModifier)}
 
           <path
             d={arcPath(start, end)}
@@ -131,9 +135,9 @@
             fill="white"
             font-size={sliceAngle < 30 ? '10' : '14'}
             font-weight="bold"
-            transform={`rotate(${mid} ${pos.x} ${pos.y})`}
+            style={`transform: rotate(${rotationAmount}deg); transform-origin: ${pos.x}px ${pos.y}px;`}
           >
-            {item.length > 10 ? item.slice(0, 9) + '…' : item}
+            {item.length > 12 ? item.slice(0, 11) + '…' : item}
           </text>
         {/each}
 
@@ -147,12 +151,12 @@
   <button
     class="btn primary"
     onclick={spin}
-    disabled={spinning || items.length < 2}
+    disabled={spinning || hasNoItems}
     aria-label="Spin the wheel"
   >
     {#if spinning}
-      Spinning…
-    {:else if items.length < 2}
+      Spinning
+    {:else if hasNoItems}
       Add items to spin
     {:else}
       Spin

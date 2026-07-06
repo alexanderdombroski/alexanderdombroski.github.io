@@ -265,6 +265,11 @@
     border: 1px solid #ebebeb;
     border-radius: 0.4rem;
     padding: 0.45rem 0.6rem;
+
+    .btn {
+      --btn-color: red;
+      font-size: 1rem;
+    }
   }
 
   .item-dot {
@@ -286,6 +291,7 @@
   /* ── Clear all ── */
   .clear-all {
     align-self: center;
+    --btn-color: red;
   }
 
   /* ── A11y ── */
