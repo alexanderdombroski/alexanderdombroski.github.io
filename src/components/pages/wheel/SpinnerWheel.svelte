@@ -1,49 +1,24 @@
 <script lang="ts">
-  interface Props {
-    items: string[];
-  }
-
-  let { items = $bindable() }: Props = $props();
+  import {
+    wheelState,
+    itemColor,
+    polar,
+    arcPath,
+    RADIUS,
+    CX,
+    CY,
+    SPIN_DURATION_MS,
+  } from './wheel.svelte.ts';
 
   let rotation = $state(0);
   let spinning = $state(false);
   let winner = $state('');
   let winnerVisible = $state(false);
-  const hasNoItems = $derived(!items.length);
+  const hasNoItems = $derived(!wheelState.items.length);
 
-  const COLORS = [
-    '#e05c5c',
-    '#d97f3a',
-    '#c8a800',
-    '#4c9a52',
-    '#3a86c8',
-    '#7b5ea7',
-    '#c8547a',
-    '#3aadad',
-    '#8b7340',
-    '#6a6a6a',
-  ];
-
-  const RADIUS = 180;
-  const CX = 200;
-  const CY = 200;
-  const SPIN_DURATION_MS = 5200;
-
-  const sliceAngle = $derived(360 / items.length);
-  const FORMAT_COMPACT = $derived(items.length > 4);
+  const sliceAngle = $derived(360 / wheelState.items.length);
+  const FORMAT_COMPACT = $derived(wheelState.items.length > 4);
   const polarModifier = $derived(FORMAT_COMPACT ? 0.5 : 0.65);
-
-  function polar(angle: number, r: number) {
-    const rad = ((angle - 90) * Math.PI) / 180;
-    return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
-  }
-
-  function arcPath(start: number, end: number) {
-    const p1 = polar(start, RADIUS);
-    const p2 = polar(end, RADIUS);
-    const large = end - start <= 180 ? 0 : 1;
-    return `M ${CX} ${CY} L ${p1.x} ${p1.y} A ${RADIUS} ${RADIUS} 0 ${large} 1 ${p2.x} ${p2.y} Z`;
-  }
 
   function spin() {
     if (spinning || hasNoItems) return;
@@ -52,18 +27,18 @@
     winner = '';
     winnerVisible = false;
 
-    const index = Math.floor(Math.random() * items.length);
+    const index = Math.floor(Math.random() * wheelState.items.length);
     const target = 360 - (index * sliceAngle + sliceAngle / 2);
     const extraTurns = 5 + Math.floor(Math.random() * 3);
 
     rotation += extraTurns * 360 + target - (rotation % 360);
 
     setTimeout(() => {
-      winner = items[index];
+      winner = wheelState.items[index];
       winnerVisible = true;
       spinning = false;
       // Remove the winner immediately once the wheel stops
-      items = items.filter((_, i) => i !== index);
+      wheelState.items = wheelState.items.filter((_, i) => i !== index);
     }, SPIN_DURATION_MS);
   }
 </script>
@@ -76,11 +51,11 @@
 
   <!-- Wheel -->
   <div class="wheel-wrap">
-    {#if items.length === 0}
+    {#if wheelState.items.length === 0}
       <div class="empty-wheel">
         <p>Add items to spin</p>
       </div>
-    {:else if items.length === 1}
+    {:else if wheelState.items.length === 1}
       <svg
         viewBox="0 0 400 400"
         class="wheel"
@@ -90,7 +65,7 @@
           cx={CX}
           cy={CY}
           r={RADIUS}
-          fill={COLORS[0]}
+          fill={itemColor(0)}
           stroke="white"
           stroke-width="2"
         />
@@ -103,7 +78,7 @@
           font-size="18"
           font-weight="bold"
         >
-          {items[0]}
+          {wheelState.items[0]}
         </text>
         <circle cx={CX} cy={CY} r="22" fill="#111" />
       </svg>
@@ -113,7 +88,7 @@
         class="wheel"
         style={`transform: rotate(${rotation}deg);`}
       >
-        {#each items as item, i}
+        {#each wheelState.items as item, i (item)}
           {@const start = i * sliceAngle}
           {@const end = start + sliceAngle}
           {@const mid = start + sliceAngle / 2}
@@ -122,7 +97,7 @@
 
           <path
             d={arcPath(start, end)}
-            fill={COLORS[i % COLORS.length]}
+            fill={itemColor(i)}
             stroke="white"
             stroke-width="2"
           />

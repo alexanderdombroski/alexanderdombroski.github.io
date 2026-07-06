@@ -1,8 +1,6 @@
 <script lang="ts">
   import ItemForm from './ItemForm.svelte';
   import SpinnerWheel from './SpinnerWheel.svelte';
-
-  let items: string[] = $state([]);
 </script>
 
 <div class="wheel-page">
@@ -12,8 +10,8 @@
   </header>
 
   <div class="wheel-layout">
-    <ItemForm bind:items />
-    <SpinnerWheel bind:items />
+    <ItemForm />
+    <SpinnerWheel />
   </div>
 </div>
 

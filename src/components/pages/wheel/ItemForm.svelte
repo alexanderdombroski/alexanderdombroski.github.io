@@ -1,9 +1,5 @@
 <script lang="ts">
-  interface Props {
-    items: string[];
-  }
-
-  let { items = $bindable() }: Props = $props();
+  import { wheelState, itemColor } from './wheel.svelte.ts';
 
   let inputValue = $state('');
   let error = $state('');
@@ -18,18 +14,18 @@
       return;
     }
 
-    if (items.includes(trimmed)) {
+    if (wheelState.items.includes(trimmed)) {
       error = 'That item is already on the wheel.';
       return;
     }
 
-    items = [...items, trimmed];
+    wheelState.items = [...wheelState.items, trimmed];
     inputValue = '';
     error = '';
   }
 
   function removeItem(index: number) {
-    items = items.filter((_, i) => i !== index);
+    wheelState.items = wheelState.items.filter((_, i) => i !== index);
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -50,10 +46,10 @@
 
     e.preventDefault();
 
-    const newItems = tokens.filter((t) => !items.includes(t));
+    const newItems = tokens.filter((t) => !wheelState.items.includes(t));
     const skipped = tokens.length - newItems.length;
 
-    items = [...items, ...newItems];
+    wheelState.items = [...wheelState.items, ...newItems];
     inputValue = '';
     error = '';
 
@@ -71,7 +67,7 @@
   }
 
   function clearAll() {
-    items = [];
+    wheelState.items = [];
     error = '';
     pasteStatus = '';
   }
@@ -80,8 +76,8 @@
 <aside class="item-form" aria-label="Wheel items manager">
   <header class="form-header">
     <h2 class="form-title">Items</h2>
-    <span class="item-count" aria-label="{items.length} items"
-      >{items.length}</span
+    <span class="item-count" aria-label="{wheelState.items.length} items"
+      >{wheelState.items.length}</span
     >
   </header>
 
@@ -118,15 +114,12 @@
   </div>
 
   <ul class="items-list" aria-label="Wheel items">
-    {#if items.length === 0}
+    {#if wheelState.items.length === 0}
       <li class="no-items">No items yet — add some above!</li>
     {:else}
-      {#each items as item, i}
+      {#each wheelState.items as item, i (item)}
         <li class="item-row">
-          <span
-            class="item-dot"
-            style={`background: hsl(${(i * 36) % 360}, 60%, 55%)`}
-          ></span>
+          <span class="item-dot" style={`background: ${itemColor(i)}`}></span>
           <span class="item-label">{item}</span>
           <button
             class="btn tight"
@@ -140,7 +133,7 @@
     {/if}
   </ul>
 
-  {#if items.length > 0}
+  {#if wheelState.items.length > 0}
     <button class="btn clear-all" onclick={clearAll}>Clear all</button>
   {/if}
 </aside>
