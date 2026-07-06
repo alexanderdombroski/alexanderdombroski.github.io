@@ -1,0 +1,8 @@
+---
+import Wheel from '../../components/pages/wheel/Wheel.svelte';
+import EmptyLayout from '../../layouts/EmptyLayout.astro';
+---
+
+<EmptyLayout title="Wheel" description="Choose items randomly using a wheel">
+  <Wheel client:only="svelte" />
+</EmptyLayout>
