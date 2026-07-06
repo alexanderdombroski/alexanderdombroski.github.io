@@ -1,6 +1,23 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import {
+    getLocalStorage,
+    setLocalStorage,
+  } from '../../../utils/localstorage';
+  import { wheelState } from './wheel.svelte.ts';
   import ItemForm from './ItemForm.svelte';
   import SpinnerWheel from './SpinnerWheel.svelte';
+
+  onMount(() => {
+    const stored = getLocalStorage<string[]>('wheel-items');
+    if (stored) {
+      wheelState.items = stored;
+    }
+  });
+
+  $effect(() => {
+    setLocalStorage('wheel-items', wheelState.items);
+  });
 </script>
 
 <div class="wheel-page">
