@@ -1,5 +1,6 @@
 <script lang="ts">
   import { wheelState, itemColor } from './wheel.svelte.ts';
+  import { shuffle } from '../../../utils/random';
 
   let inputValue = $state('');
   let error = $state('');
@@ -64,6 +65,10 @@
       parts.push(`${skipped} duplicate${skipped === 1 ? '' : 's'} skipped`);
     pasteStatus = parts.join(' · ');
     pasteStatusTimer = setTimeout(() => (pasteStatus = ''), 3000);
+  }
+
+  function shuffleItems() {
+    wheelState.items = shuffle(wheelState.items);
   }
 
   function clearAll() {
@@ -134,7 +139,16 @@
   </ul>
 
   {#if wheelState.items.length > 0}
-    <button class="btn clear-all" onclick={clearAll}>Clear all</button>
+    <div class="form-actions">
+      <button
+        class="btn shuffle"
+        onclick={shuffleItems}
+        disabled={wheelState.items.length <= 1}
+      >
+        Shuffle
+      </button>
+      <button class="btn clear-all" onclick={clearAll}>Clear all</button>
+    </div>
   {/if}
 </aside>
 
@@ -285,9 +299,14 @@
     white-space: nowrap;
   }
 
-  /* ── Clear all ── */
+  /* ── Form Actions ── */
+  .form-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
   .clear-all {
-    align-self: center;
     --btn-color: red;
   }
 
