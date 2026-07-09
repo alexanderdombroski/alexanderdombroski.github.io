@@ -1,10 +1,12 @@
 ---
 import BaseHead from './partials/Head.astro';
+import Footer from './partials/Footer.astro';
+import Header from './partials/Header.astro';
 
-type Props = {
+interface Props {
   title: string;
   description: string;
-};
+}
 
 const { title, description } = Astro.props;
 ---
@@ -14,13 +16,10 @@ const { title, description } = Astro.props;
     <BaseHead title={title} description={description} />
   </head>
   <body>
-    <slot />
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
-
-<style>
-  body {
-    height: 100vh;
-    align-content: center;
-  }
-</style>

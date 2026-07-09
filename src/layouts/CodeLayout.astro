@@ -1,0 +1,41 @@
+---
+import BaseHead from './partials/Head.astro';
+import Footer from './partials/Footer.astro';
+import Header from './partials/Header.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  main {
+    width: min(1100px, calc(100% - 2rem));
+    margin: 0 auto;
+    padding-top: 2.25rem;
+    padding-bottom: 4rem;
+  }
+
+  @media (max-width: 720px) {
+    main {
+      width: min(100% - 1rem, 1100px);
+      padding-top: 1.5rem;
+    }
+  }
+</style>

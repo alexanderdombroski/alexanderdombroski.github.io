@@ -1,4 +1,6 @@
 ---
+import CodeLayout from '../../layouts/CodeLayout.astro';
+
 const { prData, issueData } =
   (await import('../../assets/data/opensource.json')) as {
     prData: {
@@ -19,66 +21,71 @@ const { prData, issueData } =
   };
 ---
 
-<!-- https://astro.badg.es/contributor/alexanderdombroski/ -->
-<h1>Open Source Contributions</h1>
+<CodeLayout
+  title="Open Source Contributions"
+  description="A history of my open source contributions"
+>
+  <!-- https://astro.badg.es/contributor/alexanderdombroski/ -->
+  <h1>Open Source Contributions</h1>
 
-<p>A history of interactions with the open source world</p>
+  <p>A history of my interactions with the open source world</p>
 
-<h2>Pull Requests</h2>
-<div class="grid">
-  {
-    prData.map((pr) => {
-      const status = pr.merged_at
-        ? 'merged'
-        : pr.state === 'closed'
-          ? 'closed'
-          : 'open';
+  <h2>Pull Requests</h2>
+  <div class="grid">
+    {
+      prData.map((pr) => {
+        const status = pr.merged_at
+          ? 'merged'
+          : pr.state === 'closed'
+            ? 'closed'
+            : 'open';
 
-      return (
-        <a href={pr.html_url} target="_blank">
-          <div class="card">
-            <div class="repo">{pr.base.repo.full_name}</div>
+        return (
+          <a href={pr.html_url} target="_blank">
+            <div class="card">
+              <div class="repo">{pr.base.repo.full_name}</div>
 
-            <div class="title">{pr.title}</div>
+              <div class="title">{pr.title}</div>
 
-            <div class="meta">
-              <span>#{pr.number}</span>
+              <div class="meta">
+                <span>#{pr.number}</span>
 
-              <span class={`badge ${status}`}>{status}</span>
+                <span class={`badge ${status}`}>{status}</span>
+              </div>
             </div>
-          </div>
-        </a>
-      );
-    })
-  }
-</div>
+          </a>
+        );
+      })
+    }
+  </div>
 
-<h2>Issues</h2>
-<div class="grid">
-  {
-    issueData.map((issue) => {
-      const status = issue.state === 'closed' ? 'closed' : 'open';
+  <h2>Issues</h2>
+  <div class="grid">
+    {
+      issueData.map((issue) => {
+        const status = issue.state === 'closed' ? 'closed' : 'open';
 
-      return (
-        <a href={issue.html_url} target="_blank" rel="noreferrer">
-          <div class="card">
-            <div class="repo">
-              {issue.repository_url.split('/').slice(-2).join('/')}
+        return (
+          <a href={issue.html_url} target="_blank" rel="noreferrer">
+            <div class="card">
+              <div class="repo">
+                {issue.repository_url.split('/').slice(-2).join('/')}
+              </div>
+
+              <div class="title">{issue.title}</div>
+
+              <div class="meta">
+                <span>#{issue.number}</span>
+
+                <span class={`badge ${status}`}>{status}</span>
+              </div>
             </div>
-
-            <div class="title">{issue.title}</div>
-
-            <div class="meta">
-              <span>#{issue.number}</span>
-
-              <span class={`badge ${status}`}>{status}</span>
-            </div>
-          </div>
-        </a>
-      );
-    })
-  }
-</div>
+          </a>
+        );
+      })
+    }
+  </div>
+</CodeLayout>
 
 <style>
   h2 {

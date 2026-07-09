@@ -1,7 +1,5 @@
 ---
-import BaseHead from '../../components/base/Head.astro';
-import Footer from '../../components/Footer.astro';
-import Header from '../../components/Header.astro';
+import CodeLayout from '../../layouts/CodeLayout.astro';
 import projects from '../../assets/data/projects.json';
 
 const formatDate = (value: string) =>
@@ -20,373 +18,355 @@ const initialLanguages = [
 const visibleProjectCount = initialProjects.length;
 ---
 
-<html lang="en">
-  <head>
-    <BaseHead
-      title="Projects"
-      description="Browse Alex Dombroski's public GitHub repositories with language filters."
-    />
-  </head>
-  <body>
-    <Header />
-    <main>
-      <section class="hero">
-        <div class="eyebrow">Code</div>
-        <h1>Personal Projects</h1>
-        <p>
-          A public, accessible view of my GitHub repositories. Filter by
-          language, scan the cards, and jump straight to the source.
-        </p>
-        <p class="stats" data-filter-status aria-live="polite">
-          Showing {visibleProjectCount} repositories
-        </p>
-      </section>
+<CodeLayout
+  title="Projects"
+  description="Browse Alex Dombroski's public GitHub repositories with language filters."
+>
+  <section class="hero">
+    <div class="eyebrow">Code</div>
+    <h1>Personal Projects</h1>
+    <p>
+      A public, accessible view of my GitHub repositories. Filter by language,
+      scan the cards, and jump straight to the source.
+    </p>
+    <p class="stats" data-filter-status aria-live="polite">
+      Showing {visibleProjectCount} repositories
+    </p>
+  </section>
 
-      <section aria-labelledby="language-filters" class="filters">
-        <div class="controls">
+  <section aria-labelledby="language-filters" class="filters">
+    <div class="controls">
+      <button
+        class="fork-toggle"
+        type="button"
+        data-forks-toggle
+        aria-pressed="false"
+      >
+        Show forks
+      </button>
+    </div>
+
+    <div class="section-heading">
+      <h2 id="language-filters">Filter by language</h2>
+      <p>
+        By default, forks are hidden. Turning them on also adds fork-only
+        languages to the filter list.
+      </p>
+    </div>
+
+    <div class="filter-row" data-filter-row>
+      <button
+        class="filter-button active"
+        type="button"
+        data-language-filter="all"
+        aria-pressed="true"
+      >
+        All
+      </button>
+      {
+        initialLanguages.map((language) => (
           <button
-            class="fork-toggle"
+            class="filter-button"
             type="button"
-            data-forks-toggle
+            data-language-filter={language}
             aria-pressed="false"
           >
-            Show forks
+            {language}
           </button>
-        </div>
+        ))
+      }
+    </div>
+  </section>
 
-        <div class="section-heading">
-          <h2 id="language-filters">Filter by language</h2>
-          <p>
-            By default, forks are hidden. Turning them on also adds fork-only
-            languages to the filter list.
-          </p>
-        </div>
+  <section aria-labelledby="projects" class="projects">
+    <div class="section-heading">
+      <h2 id="projects">Repositories</h2>
+      <p>Cards stay readable even without JavaScript enabled.</p>
+    </div>
 
-        <div class="filter-row" data-filter-row>
-          <button
-            class="filter-button active"
-            type="button"
-            data-language-filter="all"
-            aria-pressed="true"
+    <div class="grid" data-project-grid>
+      {
+        initialProjects.map((repo) => (
+          <article
+            class="card"
+            data-repo-card
+            data-repo-full-name={repo.full_name}
+            data-is-fork={String(repo.fork)}
           >
-            All
-          </button>
-          {
-            initialLanguages.map((language) => (
-              <button
-                class="filter-button"
-                type="button"
-                data-language-filter={language}
-                aria-pressed="false"
-              >
-                {language}
-              </button>
-            ))
-          }
-        </div>
-      </section>
+            <div class="card-top">
+              <div>
+                <p class="repo-name">{repo.name}</p>
+                <p class="repo-full-name">{repo.full_name}</p>
+              </div>
+              <div class="badges">
+                {repo.fork && <span class="badge muted">Fork</span>}
+                {repo.archived && <span class="badge muted">Archived</span>}
+              </div>
+            </div>
 
-      <section aria-labelledby="projects" class="projects">
-        <div class="section-heading">
-          <h2 id="projects">Repositories</h2>
-          <p>Cards stay readable even without JavaScript enabled.</p>
-        </div>
+            <p class="description">
+              {repo.description ?? 'No description provided.'}
+            </p>
 
-        <div class="grid" data-project-grid>
-          {
-            initialProjects.map((repo) => (
-              <article
-                class="card"
-                data-repo-card
-                data-repo-full-name={repo.full_name}
-                data-is-fork={String(repo.fork)}
-              >
-                <div class="card-top">
-                  <div>
-                    <p class="repo-name">{repo.name}</p>
-                    <p class="repo-full-name">{repo.full_name}</p>
-                  </div>
-                  <div class="badges">
-                    {repo.fork && <span class="badge muted">Fork</span>}
-                    {repo.archived && <span class="badge muted">Archived</span>}
-                  </div>
+            <div
+              class="language-list"
+              aria-label={`Languages used in ${repo.name}`}
+            >
+              {repo.languageEntries.length > 0 ? (
+                repo.languageEntries.map((language) => (
+                  <span class="language-pill">
+                    {language.name}
+                    <span class="language-bytes">
+                      {language.bytes.toLocaleString()}
+                    </span>
+                  </span>
+                ))
+              ) : (
+                <span class="language-pill">Other</span>
+              )}
+            </div>
+
+            <div class="meta">
+              <span>{repo.stargazers_count} stars</span>
+              <span>{repo.forks_count} forks</span>
+              <span>Updated {formatDate(repo.updated_at)}</span>
+            </div>
+
+            <a
+              class="repo-link"
+              href={repo.html_url}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Open repository
+            </a>
+          </article>
+        ))
+      }
+      {
+        forkProjects.map((repo) => (
+          <template
+            data-fork-card-template
+            data-repo-full-name={repo.full_name}
+          >
+            <article
+              class="card"
+              data-repo-card
+              data-repo-full-name={repo.full_name}
+              data-is-fork={String(repo.fork)}
+            >
+              <div class="card-top">
+                <div>
+                  <p class="repo-name">{repo.name}</p>
+                  <p class="repo-full-name">{repo.full_name}</p>
                 </div>
+                <div class="badges">
+                  {repo.fork && <span class="badge muted">Fork</span>}
+                  {repo.archived && <span class="badge muted">Archived</span>}
+                </div>
+              </div>
 
-                <p class="description">
-                  {repo.description ?? 'No description provided.'}
-                </p>
+              <p class="description">
+                {repo.description ?? 'No description provided.'}
+              </p>
 
-                <div
-                  class="language-list"
-                  aria-label={`Languages used in ${repo.name}`}
-                >
-                  {repo.languageEntries.length > 0 ? (
-                    repo.languageEntries.map((language) => (
-                      <span class="language-pill">
-                        {language.name}
-                        <span class="language-bytes">
-                          {language.bytes.toLocaleString()}
-                        </span>
+              <div
+                class="language-list"
+                aria-label={`Languages used in ${repo.name}`}
+              >
+                {repo.languageEntries.length > 0 ? (
+                  repo.languageEntries.map((language) => (
+                    <span class="language-pill">
+                      {language.name}
+                      <span class="language-bytes">
+                        {language.bytes.toLocaleString()}
                       </span>
-                    ))
-                  ) : (
-                    <span class="language-pill">Other</span>
-                  )}
-                </div>
+                    </span>
+                  ))
+                ) : (
+                  <span class="language-pill">Other</span>
+                )}
+              </div>
 
-                <div class="meta">
-                  <span>{repo.stargazers_count} stars</span>
-                  <span>{repo.forks_count} forks</span>
-                  <span>Updated {formatDate(repo.updated_at)}</span>
-                </div>
+              <div class="meta">
+                <span>{repo.stargazers_count} stars</span>
+                <span>{repo.forks_count} forks</span>
+                <span>Updated {formatDate(repo.updated_at)}</span>
+              </div>
 
-                <a
-                  class="repo-link"
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Open repository
-                </a>
-              </article>
-            ))
-          }
-          {
-            forkProjects.map((repo) => (
-              <template
-                data-fork-card-template
-                data-repo-full-name={repo.full_name}
+              <a
+                class="repo-link"
+                href={repo.html_url}
+                target="_blank"
+                rel="noreferrer noopener"
               >
-                <article
-                  class="card"
-                  data-repo-card
-                  data-repo-full-name={repo.full_name}
-                  data-is-fork={String(repo.fork)}
-                >
-                  <div class="card-top">
-                    <div>
-                      <p class="repo-name">{repo.name}</p>
-                      <p class="repo-full-name">{repo.full_name}</p>
-                    </div>
-                    <div class="badges">
-                      {repo.fork && <span class="badge muted">Fork</span>}
-                      {repo.archived && (
-                        <span class="badge muted">Archived</span>
-                      )}
-                    </div>
-                  </div>
+                Open repository
+              </a>
+            </article>
+          </template>
+        ))
+      }
+    </div>
+  </section>
+</CodeLayout>
 
-                  <p class="description">
-                    {repo.description ?? 'No description provided.'}
-                  </p>
+<script>
+  import projects from '../../assets/data/projects.json';
+  const repos = projects;
+  const grid = document.querySelector('[data-project-grid]');
+  const filterRow = document.querySelector('[data-filter-row]');
+  const forksToggle = document.querySelector('[data-forks-toggle]');
+  const status = document.querySelector('[data-filter-status]');
+  const forkTemplates = new Map(
+    Array.from(document.querySelectorAll('[data-fork-card-template]')).map(
+      (template) => [
+        (template as HTMLDataElement).dataset.repoFullName,
+        template,
+      ],
+    ),
+  );
+  const cards = new Map(
+    Array.from(document.querySelectorAll('[data-repo-card]')).map((card) => [
+      (card as HTMLDataElement).dataset.repoFullName,
+      card,
+    ]),
+  );
 
-                  <div
-                    class="language-list"
-                    aria-label={`Languages used in ${repo.name}`}
-                  >
-                    {repo.languageEntries.length > 0 ? (
-                      repo.languageEntries.map((language) => (
-                        <span class="language-pill">
-                          {language.name}
-                          <span class="language-bytes">
-                            {language.bytes.toLocaleString()}
-                          </span>
-                        </span>
-                      ))
-                    ) : (
-                      <span class="language-pill">Other</span>
-                    )}
-                  </div>
+  let showForks = false;
+  let activeLanguage = 'all';
 
-                  <div class="meta">
-                    <span>{repo.stargazers_count} stars</span>
-                    <span>{repo.forks_count} forks</span>
-                    <span>Updated {formatDate(repo.updated_at)}</span>
-                  </div>
+  const normalize = (value: string) => value.toLowerCase();
 
-                  <a
-                    class="repo-link"
-                    href={repo.html_url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Open repository
-                  </a>
-                </article>
-              </template>
-            ))
-          }
-        </div>
-      </section>
-    </main>
-    <Footer />
+  const visibleRepos = () => repos.filter((repo) => showForks || !repo.fork);
 
-    <script>
-      import projects from '../../assets/data/projects.json';
-      const repos = projects;
-      const grid = document.querySelector('[data-project-grid]');
-      const filterRow = document.querySelector('[data-filter-row]');
-      const forksToggle = document.querySelector('[data-forks-toggle]');
-      const status = document.querySelector('[data-filter-status]');
-      const forkTemplates = new Map(
-        Array.from(document.querySelectorAll('[data-fork-card-template]')).map(
-          (template) => [
-            (template as HTMLDataElement).dataset.repoFullName,
-            template,
-          ],
-        ),
-      );
-      const cards = new Map(
-        Array.from(document.querySelectorAll('[data-repo-card]')).map(
-          (card) => [(card as HTMLDataElement).dataset.repoFullName, card],
-        ),
-      );
+  const syncForkCards = () => {
+    if (!grid) return;
 
-      let showForks = false;
-      let activeLanguage = 'all';
+    for (const repo of repos) {
+      if (!repo.fork) continue;
 
-      const normalize = (value: string) => value.toLowerCase();
+      const existingCard = cards.get(repo.full_name);
 
-      const visibleRepos = () =>
-        repos.filter((repo) => showForks || !repo.fork);
-
-      const syncForkCards = () => {
-        if (!grid) return;
-
-        for (const repo of repos) {
-          if (!repo.fork) continue;
-
-          const existingCard = cards.get(repo.full_name);
-
-          if (!showForks) {
-            if (existingCard) {
-              existingCard.remove();
-              cards.delete(repo.full_name);
-            }
-            continue;
-          }
-
-          if (existingCard) continue;
-
-          const template = forkTemplates.get(repo.full_name);
-          // @ts-ignore
-          const card = template?.content.firstElementChild?.cloneNode(true);
-
-          if (!(card instanceof HTMLElement)) continue;
-
-          grid.appendChild(card);
-          cards.set(repo.full_name, card);
+      if (!showForks) {
+        if (existingCard) {
+          existingCard.remove();
+          cards.delete(repo.full_name);
         }
-      };
+        continue;
+      }
 
-      const availableLanguages = () => {
-        const languages = new Set<string>();
+      if (existingCard) continue;
 
-        for (const repo of visibleRepos()) {
-          for (const language of repo.languageNames) {
-            languages.add(language);
-          }
-        }
+      const template = forkTemplates.get(repo.full_name);
+      // @ts-ignore
+      const card = template?.content.firstElementChild?.cloneNode(true);
 
-        return [...languages].sort((a, b) => a.localeCompare(b));
-      };
+      if (!(card instanceof HTMLElement)) continue;
 
-      const renderFilters = () => {
-        if (!filterRow) return;
+      grid.appendChild(card);
+      cards.set(repo.full_name, card);
+    }
+  };
 
-        const languages = availableLanguages();
-        const activeKey = normalize(activeLanguage);
-        const buttons = [
-          `<button class="filter-button ${activeLanguage === 'all' ? 'active' : ''}" type="button" data-language-filter="all" aria-pressed="${String(activeLanguage === 'all')}">All</button>`,
-          ...languages.map(
-            (language) => `
+  const availableLanguages = () => {
+    const languages = new Set<string>();
+
+    for (const repo of visibleRepos()) {
+      for (const language of repo.languageNames) {
+        languages.add(language);
+      }
+    }
+
+    return [...languages].sort((a, b) => a.localeCompare(b));
+  };
+
+  const renderFilters = () => {
+    if (!filterRow) return;
+
+    const languages = availableLanguages();
+    const activeKey = normalize(activeLanguage);
+    const buttons = [
+      `<button class="filter-button ${activeLanguage === 'all' ? 'active' : ''}" type="button" data-language-filter="all" aria-pressed="${String(activeLanguage === 'all')}">All</button>`,
+      ...languages.map(
+        (language) => `
               <button class="filter-button ${normalize(language) === activeKey ? 'active' : ''}" type="button" data-language-filter="${language}" aria-pressed="${String(normalize(language) === activeKey)}">
                 ${language}
               </button>
             `,
-          ),
-        ];
+      ),
+    ];
 
-        filterRow.innerHTML = buttons.join('');
+    filterRow.innerHTML = buttons.join('');
 
-        for (const button of Array.from(
-          filterRow.querySelectorAll('[data-language-filter]'),
-        )) {
-          button.addEventListener('click', () => {
-            activeLanguage =
-              (button as HTMLDataElement).dataset.languageFilter ?? 'all';
-            applyFilter();
-          });
-        }
-      };
+    for (const button of Array.from(
+      filterRow.querySelectorAll('[data-language-filter]'),
+    )) {
+      button.addEventListener('click', () => {
+        activeLanguage =
+          (button as HTMLDataElement).dataset.languageFilter ?? 'all';
+        applyFilter();
+      });
+    }
+  };
 
-      const applyFilter = () => {
-        syncForkCards();
+  const applyFilter = () => {
+    syncForkCards();
 
-        const languages = availableLanguages();
-        const languageSet = new Set(languages.map(normalize));
+    const languages = availableLanguages();
+    const languageSet = new Set(languages.map(normalize));
 
-        if (
-          activeLanguage !== 'all' &&
-          !languageSet.has(normalize(activeLanguage))
-        ) {
-          activeLanguage = 'all';
-        }
+    if (
+      activeLanguage !== 'all' &&
+      !languageSet.has(normalize(activeLanguage))
+    ) {
+      activeLanguage = 'all';
+    }
 
-        let visibleCount = 0;
+    let visibleCount = 0;
 
-        for (const repo of repos) {
-          const card = cards.get(repo.full_name);
-          if (!card) continue;
+    for (const repo of repos) {
+      const card = cards.get(repo.full_name);
+      if (!card) continue;
 
-          const matchesForkMode = showForks || !repo.fork;
-          const matchesLanguage =
-            activeLanguage === 'all' ||
-            repo.languageNames.some(
-              (language) => normalize(language) === normalize(activeLanguage),
-            );
+      const matchesForkMode = showForks || !repo.fork;
+      const matchesLanguage =
+        activeLanguage === 'all' ||
+        repo.languageNames.some(
+          (language) => normalize(language) === normalize(activeLanguage),
+        );
 
-          const isVisible = matchesForkMode && matchesLanguage;
-          card.toggleAttribute('hidden', !isVisible);
+      const isVisible = matchesForkMode && matchesLanguage;
+      card.toggleAttribute('hidden', !isVisible);
 
-          if (isVisible) visibleCount += 1;
-        }
+      if (isVisible) visibleCount += 1;
+    }
 
-        if (status) {
-          status.textContent =
-            activeLanguage === 'all'
-              ? `Showing ${visibleCount} repositories`
-              : `Showing ${visibleCount} repositories filtered by ${activeLanguage}`;
-        }
+    if (status) {
+      status.textContent =
+        activeLanguage === 'all'
+          ? `Showing ${visibleCount} repositories`
+          : `Showing ${visibleCount} repositories filtered by ${activeLanguage}`;
+    }
 
-        if (forksToggle) {
-          forksToggle.textContent = showForks ? 'Hide forks' : 'Show forks';
-          forksToggle.setAttribute('aria-pressed', String(showForks));
-        }
+    if (forksToggle) {
+      forksToggle.textContent = showForks ? 'Hide forks' : 'Show forks';
+      forksToggle.setAttribute('aria-pressed', String(showForks));
+    }
 
-        renderFilters();
-      };
+    renderFilters();
+  };
 
-      if (forksToggle) {
-        forksToggle.addEventListener('click', () => {
-          showForks = !showForks;
-          applyFilter();
-        });
-      }
-
+  if (forksToggle) {
+    forksToggle.addEventListener('click', () => {
+      showForks = !showForks;
       applyFilter();
-    </script>
-  </body>
-</html>
-
-<style>
-  main {
-    width: min(1100px, calc(100% - 2rem));
-    margin: 0 auto;
-    padding-top: 2.25rem;
-    padding-bottom: 4rem;
+    });
   }
 
+  applyFilter();
+</script>
+
+<style>
   .hero {
     display: grid;
     gap: 0.75rem;
@@ -612,11 +592,6 @@ const visibleProjectCount = initialProjects.length;
   }
 
   @media (max-width: 720px) {
-    main {
-      width: min(100% - 1rem, 1100px);
-      padding-top: 1.5rem;
-    }
-
     .hero {
       padding-top: 1rem;
     }
