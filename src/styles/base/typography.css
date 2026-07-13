@@ -1,29 +1,89 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* typography.css */
+
+/* =========================================================
+   Base Typography
+========================================================= */
+
+:where(body) {
+  font-family: var(--paragraph-font);
+}
+
+/* =========================================================
+   Headings & Display Text
+========================================================= */
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--heading-font);
   margin: 0 0 0.5rem 0;
-  color: rgb(var(--black));
   line-height: 1.2;
 }
-h1 {
+
+:where(h1) {
   font-size: 3.052em;
 }
-h2 {
+:where(h2) {
   font-size: 2.441em;
 }
-h3 {
+:where(h3) {
   font-size: 1.953em;
 }
-h4 {
+:where(h4) {
   font-size: 1.563em;
 }
-h5 {
+:where(h5) {
   font-size: 1.25em;
 }
-strong,
-b {
+
+/* =========================================================
+   Paragraph & Content Text
+========================================================= */
+
+:where(p, span, li, dt, dd, blockquote, figcaption, small) {
+  font-family: var(--paragraph-font);
+}
+
+/* =========================================================
+   Links & Inline Emphasis
+========================================================= */
+
+:where(a, strong, b, em, i) {
+  font-family: var(--paragraph-font);
+}
+
+:where(strong, b) {
   font-weight: 700;
+}
+
+/* =========================================================
+   Forms & Interactive Elements
+========================================================= */
+
+:where(
+  label,
+  input,
+  textarea,
+  select,
+  button,
+  legend,
+  span[role='spinbutton']
+) {
+  font-family: var(--paragraph-font);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Tables
+========================================================= */
+
+:where(table, thead, tbody, tfoot, tr, th, td, caption) {
+  font-family: var(--paragraph-font);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Code & Monospace Elements
+========================================================= */
+
+:where(code, pre, kbd, samp) {
+  font-family: monospace;
 }

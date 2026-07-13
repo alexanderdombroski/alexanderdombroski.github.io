@@ -15,26 +15,14 @@ export default defineConfig({
   },
   fonts: [
     {
-      provider: fontProviders.local(),
-      name: 'Atkinson',
-      cssVariable: '--base-font',
-      fallbacks: ['sans-serif'],
-      options: {
-        variants: [
-          {
-            src: ['./src/assets/fonts/atkinson-regular.woff'],
-            weight: 400,
-            style: 'normal',
-            display: 'swap',
-          },
-          {
-            src: ['./src/assets/fonts/atkinson-bold.woff'],
-            weight: 700,
-            style: 'normal',
-            display: 'swap',
-          },
-        ],
-      },
+      provider: fontProviders.google(),
+      name: 'Source Sans 3',
+      cssVariable: '--heading-font',
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Atkinson Hyperlegible',
+      cssVariable: '--paragraph-font',
     },
     {
       provider: fontProviders.google(),
