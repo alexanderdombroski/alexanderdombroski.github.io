@@ -29,6 +29,7 @@ const ASTRO = { owner: 'withastro', repo: 'astro' };
 const VS_CODE = { owner: 'microsoft', repo: 'vscode' };
 
 export const issues: Contribution[] = [
+  { ...ASTRO, id: 17330 },
   { ...ASTRO, id: 16790 },
   { ...VS_CODE, id: 318402 },
   { ...VS_CODE, id: 307819 },

@@ -9,6 +9,7 @@ const { prData, issueData } =
       html_url: string;
       state: string;
       merged_at: string | null;
+      created_at: string;
       base: { repo: { full_name: string } };
     }[];
     issueData: {
@@ -16,9 +17,90 @@ const { prData, issueData } =
       title: string;
       html_url: string;
       state: string;
+      created_at: string;
       repository_url: string;
     }[];
   };
+
+// ── Stats ──────────────────────────────────────────────────────────────────
+const mergedPRs = prData.filter((pr) => pr.merged_at);
+const openPRs = prData.filter((pr) => !pr.merged_at && pr.state === 'open');
+const closedPRs = prData.filter((pr) => !pr.merged_at && pr.state === 'closed');
+const openIssues = issueData.filter((i) => i.state === 'open');
+
+// ── Featured (2 most-recently merged PRs) ─────────────────────────────────
+const featured = [...mergedPRs]
+  .sort(
+    (a, b) =>
+      new Date(b.merged_at!).getTime() - new Date(a.merged_at!).getTime(),
+  )
+  .slice(0, 2);
+
+// ── Combined timeline (all PRs + issues, newest first) ────────────────────
+type TimelineItem =
+  | {
+      kind: 'pr';
+      number: number;
+      title: string;
+      html_url: string;
+      state: string;
+      merged_at: string | null;
+      created_at: string;
+      repo: string;
+    }
+  | {
+      kind: 'issue';
+      number: number;
+      title: string;
+      html_url: string;
+      state: string;
+      created_at: string;
+      repo: string;
+    };
+
+const timeline: TimelineItem[] = [
+  ...prData.map((pr) => ({
+    kind: 'pr' as const,
+    number: pr.number,
+    title: pr.title,
+    html_url: pr.html_url,
+    state: pr.state,
+    merged_at: pr.merged_at,
+    created_at: pr.created_at,
+    repo: pr.base.repo.full_name,
+  })),
+  ...issueData.map((issue) => ({
+    kind: 'issue' as const,
+    number: issue.number,
+    title: issue.title,
+    html_url: issue.html_url,
+    state: issue.state,
+    created_at: issue.created_at,
+    repo: issue.repository_url.split('/').slice(-2).join('/'),
+  })),
+].sort(
+  (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+);
+
+function prStatus(pr: { state: string; merged_at: string | null }) {
+  return pr.merged_at ? 'merged' : pr.state === 'closed' ? 'closed' : 'open';
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+function formatMergedDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 ---
 
 <CodeLayout
@@ -27,139 +109,605 @@ const { prData, issueData } =
 >
   <!-- https://astro.badg.es/contributor/alexanderdombroski/ -->
   <h1>Open Source Contributions</h1>
+  <p class="subtitle">
+    A living history of my interactions with the open source world
+  </p>
 
-  <p>A history of my interactions with the open source world</p>
-
-  <h2>Pull Requests</h2>
-  <div class="grid">
-    {
-      prData.map((pr) => {
-        const status = pr.merged_at
-          ? 'merged'
-          : pr.state === 'closed'
-            ? 'closed'
-            : 'open';
-
-        return (
-          <a href={pr.html_url} target="_blank">
-            <div class="card">
-              <div class="repo">{pr.base.repo.full_name}</div>
-
-              <div class="title">{pr.title}</div>
-
-              <div class="meta">
-                <span>#{pr.number}</span>
-
-                <span class={`badge ${status}`}>{status}</span>
-              </div>
-            </div>
-          </a>
-        );
-      })
-    }
+  <!-- ── Stats Bar ────────────────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-value">{prData.length}</span>
+      <span class="stat-label">Pull Requests</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value merged-color">{mergedPRs.length}</span>
+      <span class="stat-label">Merged</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value"
+        >{
+          new Set([
+            ...prData.map((p) => p.base.repo.full_name),
+            ...issueData.map((i) =>
+              i.repository_url.split('/').slice(-2).join('/'),
+            ),
+          ]).size
+        }</span
+      >
+      <span class="stat-label">Projects</span>
+    </div>
   </div>
 
-  <h2>Issues</h2>
-  <div class="grid">
-    {
-      issueData.map((issue) => {
-        const status = issue.state === 'closed' ? 'closed' : 'open';
+  <!-- ── Featured Merged PRs ──────────────────────────────────────────── -->
+  {
+    featured.length > 0 && (
+      <section class="featured-section">
+        <h2 class="section-heading">
+          <svg
+            class="heading-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Recent Merged Contributions
+        </h2>
+        <div class="featured-grid">
+          {featured.map((pr) => (
+            <a
+              href={pr.html_url}
+              target="_blank"
+              rel="noreferrer"
+              class="featured-card"
+            >
+              <div class="featured-repo">{pr.base.repo.full_name}</div>
+              <div class="featured-title">{pr.title}</div>
+              <div class="featured-meta">
+                <span class="featured-num">#{pr.number}</span>
+                <span class="featured-date">
+                  Merged {formatMergedDate(pr.merged_at!)}
+                </span>
+              </div>
+              <div class="featured-arrow">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
-        return (
-          <a href={issue.html_url} target="_blank" rel="noreferrer">
-            <div class="card">
-              <div class="repo">
-                {issue.repository_url.split('/').slice(-2).join('/')}
+  <!-- ── Full Timeline ────────────────────────────────────────────────── -->
+  <section class="timeline-section">
+    <h2 class="section-heading">
+      <svg
+        class="heading-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      Full Contribution Timeline
+    </h2>
+
+    <div class="timeline">
+      {
+        timeline.map((item, idx) => {
+          const status = item.kind === 'pr' ? prStatus(item) : item.state;
+          const isFeatured =
+            item.kind === 'pr' &&
+            featured.some((f) => f.number === item.number);
+          return (
+            <div class={`timeline-item ${isFeatured ? 'is-featured' : ''}`}>
+              <div class="timeline-left">
+                <div class="timeline-date">{formatDate(item.created_at)}</div>
               </div>
 
-              <div class="title">{issue.title}</div>
-
-              <div class="meta">
-                <span>#{issue.number}</span>
-
-                <span class={`badge ${status}`}>{status}</span>
+              <div class="timeline-connector">
+                <div class={`timeline-dot dot-${status} kind-${item.kind}`} />
+                {idx < timeline.length - 1 && <div class="timeline-line" />}
               </div>
+
+              <a
+                href={item.html_url}
+                target="_blank"
+                rel="noreferrer"
+                class="timeline-card"
+              >
+                <div class="timeline-card-top">
+                  <span class="tl-repo">{item.repo}</span>
+                  <div class="tl-badges">
+                    <span class={`badge type-badge ${item.kind}`}>
+                      {item.kind === 'pr' ? 'PR' : 'Issue'}
+                    </span>
+                    <span class={`badge status-badge ${status} ${item.kind}`}>
+                      {status}
+                    </span>
+                  </div>
+                </div>
+                <div class="tl-title">{item.title}</div>
+                <div class="tl-num">#{item.number}</div>
+                {isFeatured && (
+                  <div class="featured-tag">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Featured
+                  </div>
+                )}
+              </a>
             </div>
-          </a>
-        );
-      })
-    }
-  </div>
+          );
+        })
+      }
+    </div>
+  </section>
 </CodeLayout>
 
 <style>
-  h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.35rem;
+  /* ── Page header ─────────────────────────────────────────────────────── */
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
   }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+  .subtitle {
+    color: #6b7280;
+    margin-bottom: 2rem;
+    font-size: 1rem;
   }
 
-  .card {
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 1.25rem;
-    background: white;
-    transition: all 0.2s ease;
+  /* ── Stats Bar ───────────────────────────────────────────────────────── */
+  .stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
+    border: 1px solid #e0e7ff;
+    border-radius: 16px;
+    padding: 1.25rem 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .stat {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    align-items: center;
+    flex: 1;
+    min-width: 80px;
+    gap: 0.2rem;
   }
 
-  .card:hover {
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #1e293b;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: #c7d2fe;
+    flex-shrink: 0;
+  }
+
+  .merged-color {
+    color: #059669;
+  }
+  .open-color {
+    color: #2563eb;
+  }
+  .closed-color {
+    color: #dc2626;
+  }
+
+  /* ── Section headings ────────────────────────────────────────────────── */
+  .section-heading {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .heading-icon {
+    font-size: 1.1rem;
+    width: 1.1em;
+    height: 1.1em;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  /* ── Featured Cards ──────────────────────────────────────────────────── */
+  .featured-section {
+    margin-bottom: 3rem;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .featured-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.5rem;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    color: #1e293b;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+    overflow: hidden;
+  }
+
+  .featured-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-color: #10b981;
   }
 
-  .repo {
-    font-size: 0.85rem;
+  .featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    width: fit-content;
+  }
+
+  .featured-repo {
+    font-size: 0.8rem;
     color: #6b7280;
     font-weight: 500;
   }
 
-  .title {
-    font-size: 1.05rem;
+  .featured-title {
+    font-size: 1rem;
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.45;
+    color: #1e293b;
   }
 
-  .meta {
+  .featured-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    font-size: 0.8rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e5e7eb;
   }
 
-  .badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 999px;
+  .featured-num {
+    font-size: 0.8rem;
+    color: #94a3b8;
     font-weight: 500;
   }
 
-  .open {
-    background: #ecfeff;
-    color: #0891b2;
+  .featured-date {
+    font-size: 0.78rem;
+    color: #10b981;
+    font-weight: 500;
   }
 
-  .merged {
-    background: #ecfdf5;
-    color: #059669;
+  .featured-arrow {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: #9ca3af;
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
   }
 
-  .closed {
-    background: #fef2f2;
-    color: #dc2626;
+  .featured-arrow svg {
+    width: 100%;
+    height: 100%;
   }
 
-  a {
+  .featured-card:hover .featured-arrow {
+    transform: translateX(4px);
+    color: #10b981;
+  }
+
+  /* ── Timeline ────────────────────────────────────────────────────────── */
+  .timeline-section {
+    margin-bottom: 3rem;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    max-height: 700px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.25rem 1.25rem 0.5rem;
+    background: #fafafa;
+    /* fade hint at the bottom */
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+
+  .timeline::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .timeline::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .timeline::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 110px 32px 1fr;
+    gap: 0 0.75rem;
+    align-items: start;
+  }
+
+  .timeline-item.is-featured .timeline-card {
+    border-color: #a7f3d0;
+    background: linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%);
+  }
+
+  /* Left date column */
+  .timeline-left {
+    padding-top: 0.85rem;
+    text-align: right;
+  }
+
+  .timeline-date {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* Center connector column */
+  .timeline-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1rem;
+    z-index: 1;
+    box-shadow: 0 0 0 3px white;
+  }
+
+  .dot-merged {
+    background: #10b981;
+  }
+  .dot-open {
+    background: #3b82f6;
+  }
+  .dot-closed {
+    background: #ef4444;
+  }
+  .dot-closed.kind-issue {
+    background: #10b981;
+  }
+
+  .timeline-line {
+    width: 2px;
+    flex: 1;
+    min-height: 24px;
+    background: linear-gradient(to bottom, #e2e8f0 0%, #e2e8f0 100%);
+    margin-top: 2px;
+  }
+
+  /* Right card column */
+  .timeline-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
     text-decoration: none;
     color: inherit;
+    transition: all 0.18s ease;
+    position: relative;
+  }
+
+  .timeline-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    border-color: #c7d2fe;
+  }
+
+  .timeline-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tl-repo {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .tl-badges {
+    display: flex;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .tl-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.4;
+  }
+
+  .tl-num {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  .featured-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #059669;
+    background: #d1fae5;
+    border-radius: 999px;
+    padding: 0.15rem 0.55rem;
+    width: fit-content;
+  }
+
+  .featured-tag svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: #059669;
+    flex-shrink: 0;
+  }
+
+  /* ── Badges ──────────────────────────────────────────────────────────── */
+  .badge {
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Type badges */
+  .type-badge.pr {
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+  .type-badge.issue {
+    background: #fff7ed;
+    color: #c2410c;
+  }
+
+  /* Status badges */
+  .status-badge.open {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+  .status-badge.merged {
+    background: #d1fae5;
+    color: #047857;
+  }
+  .status-badge.closed {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  .status-badge.closed.issue {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .stats-bar {
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+
+    .stat-divider {
+      display: none;
+    }
+
+    .timeline-item {
+      grid-template-columns: 80px 28px 1fr;
+      gap: 0 0.5rem;
+    }
+
+    .timeline-date {
+      font-size: 0.65rem;
+    }
   }
 </style>
