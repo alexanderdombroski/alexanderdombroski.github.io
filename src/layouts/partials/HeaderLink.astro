@@ -4,9 +4,30 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+
+const normalizePath = (value: string) =>
+  value === '/' ? value : value.replace(/\/+$/, '');
+const stripBaseUrl = (value: string) => {
+  const baseUrl = import.meta.env.BASE_URL ?? '/';
+  if (baseUrl === '/' || !value.startsWith(baseUrl)) return value;
+
+  const stripped = value.slice(baseUrl.length);
+  return stripped === ''
+    ? '/'
+    : stripped.startsWith('/')
+      ? stripped
+      : `/${stripped}`;
+};
+
+const pathname = normalizePath(stripBaseUrl(Astro.url.pathname));
+const target = normalizePath(String(href ?? ''));
+
+// Keep section links active for nested routes, but only match "/" exactly.
+const isActive =
+  target === '/'
+    ? pathname === '/'
+    : target !== '' &&
+      (pathname === target || pathname.startsWith(`${target}/`));
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>
