@@ -19,6 +19,11 @@ interface Props {
 
 const { repo } = Astro.props;
 
+const totalBytes = repo.languageEntries.reduce((sum, l) => sum + l.bytes, 0);
+const visibleLanguages = repo.languageEntries.filter(
+  (l) => (l.bytes / totalBytes) * 100 >= 2,
+);
+
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('en', {
     month: 'short',
@@ -50,13 +55,15 @@ const formatDate = (value: string) =>
 
   <div class="language-list" aria-label={`Languages used in ${repo.name}`}>
     {
-      repo.languageEntries.length > 0 ? (
-        repo.languageEntries.map((language) => (
+      visibleLanguages.length > 0 ? (
+        visibleLanguages.map((language) => (
           <span class="language-pill">
             {language.name}
-            <span class="language-bytes">
-              {language.bytes.toLocaleString()}
-            </span>
+            {visibleLanguages.length > 1 && (
+              <span class="language-percent">
+                {((language.bytes / totalBytes) * 100).toFixed(1)}%
+              </span>
+            )}
           </span>
         ))
       ) : (
@@ -208,7 +215,7 @@ const formatDate = (value: string) =>
     font-weight: 600;
   }
 
-  .language-bytes {
+  .language-percent {
     color: rgb(var(--gray));
     font-weight: 700;
     font-variant-numeric: tabular-nums;
