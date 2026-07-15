@@ -20,6 +20,7 @@
     html_url: string | null;
     languageNames: string[];
     langFilterList: string[];
+    featured: boolean;
   }
 
   interface Props {
@@ -38,6 +39,10 @@
   // De-duplicate projects by id to prevent each_key_duplicate error
   const uniqueProjects = $derived(
     Array.from(new Map(projects.map((repo) => [repo.id, repo])).values()),
+  );
+
+  const featuredProjects = $derived(
+    uniqueProjects.filter((repo) => repo.featured),
   );
 
   const isOverriddenPrivateRepo = (repo: Project) => {
@@ -104,6 +109,19 @@
   );
 </script>
 
+{#if featuredProjects.length > 0}
+  <section aria-labelledby="featured-heading" class="featured-section">
+    <div class="section-heading">
+      <h2 id="featured-heading">Featured Projects</h2>
+    </div>
+    <div class="featured-grid">
+      {#each featuredProjects as repo (repo.id)}
+        <RepoCard {repo} />
+      {/each}
+    </div>
+  </section>
+{/if}
+
 <p class="stats" aria-live="polite">
   {#if activeLanguage === 'all'}
     Showing {visibleProjects.length} repositories
@@ -140,6 +158,34 @@
 </div>
 
 <style>
+  .featured-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgb(var(--gray-light));
+    background: linear-gradient(
+      135deg,
+      rgba(var(--accent), 0.04) 0%,
+      transparent 60%
+    );
+    margin-bottom: 2rem;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+    align-items: stretch;
+  }
+
+  /* Make RepoCard root elements (a.card-link or article.card) fill the grid cell */
+  .featured-grid > :global(*),
+  .featured-grid > :global(*) > :global(.card) {
+    height: 100%;
+  }
+
   .stats {
     font-weight: 600;
     color: rgb(var(--gray-dark));

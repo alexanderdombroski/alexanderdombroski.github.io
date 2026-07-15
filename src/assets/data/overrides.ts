@@ -21,3 +21,9 @@ export const additionalProjects: ProjectOverride[] = [
   { owner: 'web-Design-Development-Society', repo: 'webdevsociety' },
   { owner: 'web-Design-Development-Society', repo: 'racing' },
 ];
+
+/** Repos to highlight in a featured section above the main list */
+export const featuredProjects: ProjectOverride[] = [
+  { owner, repo: 'snippetstudio' },
+  { owner, repo: 'bisgit' },
+];

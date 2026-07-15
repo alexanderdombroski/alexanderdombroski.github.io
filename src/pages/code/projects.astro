@@ -3,6 +3,7 @@ import CodeLayout from '../../layouts/CodeLayout.astro';
 import rawProjects from '../../assets/data/projects';
 import contributorsData from '../../assets/data/contributors.json';
 import ProjectsList from '../../components/pages/projects/ProjectsList.svelte';
+import { featuredProjects } from '../../assets/data/overrides';
 
 const contributors: Record<
   string,
@@ -14,11 +15,17 @@ const projects = rawProjects.map((repo) => {
   const contributorCount = Array.isArray(repoContributors)
     ? repoContributors.length
     : 0;
+  const featured = featuredProjects.some(
+    (f) =>
+      f.owner.toLowerCase() === repo.owner.login.toLowerCase() &&
+      f.repo.toLowerCase() === repo.name.toLowerCase(),
+  );
   return {
     ...repo,
     contributorCount,
     languageNames: repo.langFilterList,
     langFilterList: repo.langFilterList,
+    featured,
   };
 });
 ---
