@@ -17,11 +17,8 @@ const projects = rawProjects.map((repo) => {
   return {
     ...repo,
     contributorCount,
-    languageNames: repo.languageEntries.length
-      ? repo.languageEntries.map(({ name }) => name)
-      : repo.language
-        ? [repo.language]
-        : ['Other'],
+    languageNames: repo.langFilterList,
+    langFilterList: repo.langFilterList,
   };
 });
 ---

@@ -58,6 +58,7 @@ export type FilteredProject = {
   open_issues_count: number;
   is_template: boolean;
   languageEntries: { name: string; bytes: number }[];
+  langFilterList: string[];
 };
 
 // Validate the raw projects array using the schema
@@ -71,6 +72,14 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
   );
 
   const shouldCensor = repo.private && !isOverridden;
+
+  const totalBytes = repo.languageEntries.reduce((sum, l) => sum + l.bytes, 0);
+  const langFilterList = repo.languageEntries.length
+    ? repo.languageEntries
+        .filter((l) => totalBytes > 0 && (l.bytes / totalBytes) * 100 >= 2.0)
+        .map(({ name }) => name)
+        .filter(Boolean)
+    : ([repo.language].filter(Boolean) as string[]);
 
   return {
     id: repo.id,
@@ -96,7 +105,8 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
     archived: repo.archived,
     open_issues_count: repo.open_issues_count,
     is_template: repo.is_template,
-    languageEntries: shouldCensor ? [] : repo.languageEntries,
+    languageEntries: repo.languageEntries,
+    langFilterList,
   };
 });
 

@@ -18,6 +18,7 @@
     pushed_at: string;
     html_url: string | null;
     languageNames: string[];
+    langFilterList: string[];
   }
 
   interface Props {
@@ -59,7 +60,7 @@
 
   // Available languages updates based on filtered projects
   const availableLanguages = $derived(
-    [...new Set(filteredProjects.flatMap((repo) => repo.languageNames))].sort(
+    [...new Set(filteredProjects.flatMap((repo) => repo.langFilterList))].sort(
       (a, b) => a.localeCompare(b),
     ),
   );
@@ -95,7 +96,7 @@
   const visibleProjects = $derived(
     sortedProjects.filter((repo) => {
       if (activeLanguage === 'all') return true;
-      return repo.languageNames.some(
+      return repo.langFilterList.some(
         (lang) => normalize(lang) === normalize(activeLanguage),
       );
     }),
