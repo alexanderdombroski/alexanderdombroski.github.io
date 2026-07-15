@@ -21,6 +21,10 @@
     languageNames: string[];
     langFilterList: string[];
     featured: boolean;
+    lastCommitDate: string | null;
+    firstCommitDate: string | null;
+    totalCommits: number | null;
+    totalPRs: number | null;
   }
 
   interface Props {
@@ -93,8 +97,10 @@
       if (sortBy === 'name') {
         return a.name.localeCompare(b.name);
       }
-      // default: updated (pushed_at)
-      return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
+      // default: last commit date, falling back to pushed_at
+      const aDate = a.lastCommitDate ?? a.pushed_at;
+      const bDate = b.lastCommitDate ?? b.pushed_at;
+      return new Date(bDate).getTime() - new Date(aDate).getTime();
     }),
   );
 

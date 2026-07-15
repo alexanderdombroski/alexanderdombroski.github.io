@@ -33,6 +33,10 @@ export const RawProjectSchema = z.object({
       }),
     )
     .default([]),
+  lastCommitDate: z.string().nullable().default(null),
+  firstCommitDate: z.string().nullable().default(null),
+  totalCommits: z.number().nullable().default(null),
+  totalPRs: z.number().nullable().default(null),
 });
 
 export type FilteredProject = {
@@ -59,6 +63,10 @@ export type FilteredProject = {
   is_template: boolean;
   languageEntries: { name: string; bytes: number }[];
   langFilterList: string[];
+  lastCommitDate: string | null;
+  firstCommitDate: string | null;
+  totalCommits: number | null;
+  totalPRs: number | null;
 };
 
 // Validate the raw projects array using the schema
@@ -107,6 +115,10 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
     is_template: repo.is_template,
     languageEntries: repo.languageEntries,
     langFilterList,
+    lastCommitDate: shouldCensor ? null : repo.lastCommitDate,
+    firstCommitDate: shouldCensor ? null : repo.firstCommitDate,
+    totalCommits: shouldCensor ? null : repo.totalCommits,
+    totalPRs: shouldCensor ? null : repo.totalPRs,
   };
 });
 

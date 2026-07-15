@@ -13,6 +13,10 @@
       contributorCount: number;
       pushed_at: string;
       html_url: string | null;
+      lastCommitDate: string | null;
+      firstCommitDate: string | null;
+      totalCommits: number | null;
+      totalPRs: number | null;
     };
   }
 
@@ -35,6 +39,11 @@
     }).format(new Date(value));
 
   const isPublic = $derived(!repo.private && repo.html_url);
+
+  // Date range: first commit → last commit (fall back to created_at / pushed_at)
+  const rangeStart = $derived(repo.firstCommitDate ?? repo.pushed_at);
+  const rangeEnd = $derived(repo.lastCommitDate ?? repo.pushed_at);
+  const showRange = $derived(rangeStart !== rangeEnd);
 </script>
 
 {#if isPublic}
@@ -143,8 +152,49 @@
             {repo.contributorCount}
           </span>
         {/if}
-        <span class="updated-date">Updated {formatDate(repo.pushed_at)}</span>
+        {#if repo.totalCommits !== null && repo.totalCommits > 0}
+          <span
+            class="commit-count"
+            title={`${repo.totalCommits} commit${repo.totalCommits === 1 ? '' : 's'}`}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              ><path
+                d="M11.5 8C11.5 6.24 10.194 4.779 8.5 4.536V1.5C8.5 1.224 8.276 1 8 1C7.724 1 7.5 1.224 7.5 1.5V4.536C5.806 4.779 4.5 6.24 4.5 8C4.5 9.76 5.806 11.221 7.5 11.464V14.5C7.5 14.776 7.724 15 8 15C8.276 15 8.5 14.776 8.5 14.5V11.464C10.194 11.221 11.5 9.76 11.5 8ZM8 10.5C6.621 10.5 5.5 9.378 5.5 8C5.5 6.622 6.621 5.5 8 5.5C9.379 5.5 10.5 6.622 10.5 8C10.5 9.378 9.379 10.5 8 10.5Z"
+              /></svg
+            >
+            {repo.totalCommits}
+          </span>
+        {/if}
+        {#if repo.totalPRs !== null && repo.totalPRs > 0}
+          <span
+            class="pr-count"
+            title={`${repo.totalPRs} pull request${repo.totalPRs === 1 ? '' : 's'}`}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              ><path
+                d="M13 10.05V5.5C13 4.12 11.88 3 10.5 3H8.71L9.85 1.85C10.05 1.66 10.05 1.34 9.85 1.15C9.66 0.95 9.34 0.95 9.15 1.15L7.15 3.15C6.95 3.34 6.95 3.66 7.15 3.85L9.15 5.85C9.34 6.05 9.66 6.05 9.85 5.85C10.05 5.66 10.05 5.34 9.85 5.15L8.71 4H10.5C11.33 4 12 4.67 12 5.5V10.05C10.86 10.28 10 11.29 10 12.5C10 13.88 11.12 15 12.5 15C13.88 15 15 13.88 15 12.5C15 11.29 14.14 10.28 13 10.05ZM12.5 14C11.67 14 11 13.33 11 12.5C11 11.67 11.67 11 12.5 11C13.33 11 14 11.67 14 12.5C14 13.33 13.33 14 12.5 14ZM6 3.5C6 2.12 4.88 1 3.5 1C2.12 1 1 2.12 1 3.5C1 4.71 1.86 5.72 3 5.95V10.051C1.86 10.283 1 11.293 1 12.5C1 13.879 2.122 15 3.5 15C4.878 15 6 13.879 6 12.5C6 11.292 5.14 10.283 4 10.051V5.95C5.14 5.72 6 4.71 6 3.5ZM2 3.5C2 2.67 2.67 2 3.5 2C4.33 2 5 2.67 5 3.5C5 4.33 4.33 5 3.5 5C2.67 5 2 4.33 2 3.5ZM5 12.5C5 13.327 4.327 14 3.5 14C2.673 14 2 13.327 2 12.5C2 11.673 2.673 11 3.5 11C4.327 11 5 11.673 5 12.5Z"
+              /></svg
+            >
+            {repo.totalPRs}
+          </span>
+        {/if}
       </div>
+      <p class="date-range">
+        {formatDate(rangeStart)}
+        {#if showRange}
+          — {formatDate(rangeEnd)}
+        {/if}
+      </p>
     </article>
   </a>
 {:else}
@@ -244,8 +294,49 @@
           {repo.contributorCount}
         </span>
       {/if}
-      <span class="updated-date">Updated {formatDate(repo.pushed_at)}</span>
+      {#if repo.totalCommits !== null && repo.totalCommits > 0}
+        <span
+          class="commit-count"
+          title={`${repo.totalCommits} commit${repo.totalCommits === 1 ? '' : 's'}`}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            ><path
+              d="M11.5 8C11.5 6.24 10.194 4.779 8.5 4.536V1.5C8.5 1.224 8.276 1 8 1C7.724 1 7.5 1.224 7.5 1.5V4.536C5.806 4.779 4.5 6.24 4.5 8C4.5 9.76 5.806 11.221 7.5 11.464V14.5C7.5 14.776 7.724 15 8 15C8.276 15 8.5 14.776 8.5 14.5V11.464C10.194 11.221 11.5 9.76 11.5 8ZM8 10.5C6.621 10.5 5.5 9.378 5.5 8C5.5 6.622 6.621 5.5 8 5.5C9.379 5.5 10.5 6.622 10.5 8C10.5 9.378 9.379 10.5 8 10.5Z"
+            /></svg
+          >
+          {repo.totalCommits}
+        </span>
+      {/if}
+      {#if repo.totalPRs !== null && repo.totalPRs > 0}
+        <span
+          class="pr-count"
+          title={`${repo.totalPRs} pull request${repo.totalPRs === 1 ? '' : 's'}`}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            ><path
+              d="M13 10.05V5.5C13 4.12 11.88 3 10.5 3H8.71L9.85 1.85C10.05 1.66 10.05 1.34 9.85 1.15C9.66 0.95 9.34 0.95 9.15 1.15L7.15 3.15C6.95 3.34 6.95 3.66 7.15 3.85L9.15 5.85C9.34 6.05 9.66 6.05 9.85 5.85C10.05 5.66 10.05 5.34 9.85 5.15L8.71 4H10.5C11.33 4 12 4.67 12 5.5V10.05C10.86 10.28 10 11.29 10 12.5C10 13.88 11.12 15 12.5 15C13.88 15 15 13.88 15 12.5C15 11.29 14.14 10.28 13 10.05ZM12.5 14C11.67 14 11 13.33 11 12.5C11 11.67 11.67 11 12.5 11C13.33 11 14 11.67 14 12.5C14 13.33 13.33 14 12.5 14ZM6 3.5C6 2.12 4.88 1 3.5 1C2.12 1 1 2.12 1 3.5C1 4.71 1.86 5.72 3 5.95V10.051C1.86 10.283 1 11.293 1 12.5C1 13.879 2.122 15 3.5 15C4.878 15 6 13.879 6 12.5C6 11.292 5.14 10.283 4 10.051V5.95C5.14 5.72 6 4.71 6 3.5ZM2 3.5C2 2.67 2.67 2 3.5 2C4.33 2 5 2.67 5 3.5C5 4.33 4.33 5 3.5 5C2.67 5 2 4.33 2 3.5ZM5 12.5C5 13.327 4.327 14 3.5 14C2.673 14 2 13.327 2 12.5C2 11.673 2.673 11 3.5 11C4.327 11 5 11.673 5 12.5Z"
+            /></svg
+          >
+          {repo.totalPRs}
+        </span>
+      {/if}
     </div>
+    <p class="date-range">
+      {formatDate(rangeStart)}
+      {#if showRange}
+        — {formatDate(rangeEnd)}
+      {/if}
+    </p>
   </article>
 {/if}
 
@@ -381,9 +472,18 @@
     white-space: nowrap;
   }
 
+  .date-range {
+    margin: 0;
+    font-size: 0.78rem;
+    color: rgb(var(--gray));
+    white-space: nowrap;
+  }
+
   .contributor-count,
   .fork-count,
-  .star-count {
+  .star-count,
+  .commit-count,
+  .pr-count {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;

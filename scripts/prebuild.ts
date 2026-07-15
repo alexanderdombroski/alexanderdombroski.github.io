@@ -130,9 +130,10 @@ async function fetchProjectsData(octokit: Octokit) {
             ? [repo.language]
             : ['Other'];
 
-        // ── Last commit date + total commit count ────────────────────────
+        // ── Last commit date + total commit count + first commit date ─────
         // Fetch just the first page (1 item) — the Link header tells us total pages.
         let lastCommitDate: string | null = null;
+        let firstCommitDate: string | null = null;
         let totalCommits: number | null = null;
         try {
           const commitsResp = await octokit.request(
@@ -150,6 +151,20 @@ async function fetchProjectsData(octokit: Octokit) {
           ];
           const totalPages = parseTotalPages(linkHeader);
           totalCommits = totalPages ?? (commitsResp.data.length > 0 ? 1 : 0);
+
+          // First commit date — fetch the oldest page
+          if (totalCommits > 1) {
+            const firstResp = await octokit.request(
+              'GET /repos/{owner}/{repo}/commits',
+              { owner, repo: name, per_page: 1, page: totalCommits },
+            );
+            firstCommitDate =
+              firstResp.data[0]?.commit?.committer?.date ??
+              firstResp.data[0]?.commit?.author?.date ??
+              null;
+          } else {
+            firstCommitDate = lastCommitDate;
+          }
         } catch (err) {
           console.warn(`[prebuild] Could not fetch commits for ${name}:`, err);
         }
@@ -181,6 +196,7 @@ async function fetchProjectsData(octokit: Octokit) {
           languageEntries,
           languageNames,
           lastCommitDate,
+          firstCommitDate,
           totalCommits,
           totalPRs,
         };
