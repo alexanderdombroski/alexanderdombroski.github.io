@@ -89,8 +89,10 @@
           aria-label="Sort repositories by"
         >
           <option value="updated">Recently updated</option>
+          <option value="oldest-commit">Oldest commit</option>
+          <option value="commits">Most commits</option>
+          <option value="contributors">Most contributors</option>
           <option value="stars">Stars</option>
-          <option value="forks">Forks</option>
           <option value="name">Name (A-Z)</option>
         </select>
       </div>

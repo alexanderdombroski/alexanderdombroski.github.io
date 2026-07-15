@@ -91,11 +91,22 @@
       if (sortBy === 'stars') {
         return b.stargazers_count - a.stargazers_count;
       }
-      if (sortBy === 'forks') {
-        return b.forks_count - a.forks_count;
-      }
       if (sortBy === 'name') {
         return a.name.localeCompare(b.name);
+      }
+      if (sortBy === 'oldest-commit') {
+        const aDate = a.firstCommitDate;
+        const bDate = b.firstCommitDate;
+        if (!aDate && !bDate) return 0;
+        if (!aDate) return 1;
+        if (!bDate) return -1;
+        return new Date(aDate).getTime() - new Date(bDate).getTime();
+      }
+      if (sortBy === 'commits') {
+        return (b.totalCommits ?? 0) - (a.totalCommits ?? 0);
+      }
+      if (sortBy === 'contributors') {
+        return b.contributorCount - a.contributorCount;
       }
       // default: last commit date, falling back to pushed_at
       const aDate = a.lastCommitDate ?? a.pushed_at;
