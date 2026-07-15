@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { Octokit } from 'octokit';
 import { issues, prs, type Contribution } from '../src/assets/data/opensource';
-import { overrides } from '../src/assets/data/projects';
+import { overrides } from '../src/assets/data/overrides';
 import { loadEnvFile } from 'node:process';
 
 type CacheManifest = Record<string, string>; // key → ISO timestamp

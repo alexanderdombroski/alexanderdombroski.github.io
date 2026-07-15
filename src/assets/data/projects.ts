@@ -1,10 +1,7 @@
 import { z } from 'zod';
-import rawProjects from './projects.json' with { type: 'json' };
-
-export interface ProjectOverride {
-  owner: string;
-  repo: string;
-}
+import rawProjects from './projects.json';
+import { overrides } from './overrides';
+export type { ProjectOverride } from './overrides';
 
 export const RawProjectSchema = z.object({
   id: z.number(),
@@ -62,17 +59,6 @@ export type FilteredProject = {
   is_template: boolean;
   languageEntries: { name: string; bytes: number }[];
 };
-
-const owner = 'alexanderdombroski';
-
-/** Private Repos to show minimal metadata about */
-export const overrides: ProjectOverride[] = [
-  { owner, repo: 'cse381-course' },
-  { owner, repo: 'apj-storefront-2' },
-  { owner, repo: 'elixir' },
-  { owner, repo: 'cse212' },
-  { owner, repo: 'parallelism_concurrency' },
-];
 
 // Validate the raw projects array using the schema
 const parsedProjects = z.array(RawProjectSchema).parse(rawProjects);
