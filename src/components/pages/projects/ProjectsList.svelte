@@ -1,7 +1,10 @@
 <script lang="ts">
   import RepoCard from './RepoCard.svelte';
+  import ProjectsSidebar from './ProjectsSidebar.svelte';
+  import { overrides } from '../../../assets/data/overrides';
 
   interface Project {
+    id: number;
     name: string;
     fullname: string;
     fork: boolean;
@@ -24,18 +27,41 @@
   let { projects }: Props = $props();
 
   let showForks = $state(false);
+  let showPrivate = $state(false);
   let activeLanguage = $state('all');
+  let sortBy = $state('updated');
 
   const normalize = (value: string) => value.toLowerCase();
 
-  const forkFilteredProjects = $derived(
-    projects.filter((repo) => showForks || !repo.fork),
+  // De-duplicate projects by id to prevent each_key_duplicate error
+  const uniqueProjects = $derived(
+    Array.from(new Map(projects.map((repo) => [repo.id, repo])).values()),
   );
 
+  const isOverriddenPrivateRepo = (repo: Project) => {
+    return (
+      repo.private &&
+      overrides.some(
+        (override) => override.repo.toLowerCase() === repo.name.toLowerCase(),
+      )
+    );
+  };
+
+  // Filter projects by forks and private visibility
+  const filteredProjects = $derived(
+    uniqueProjects.filter((repo) => {
+      const matchesFork = showForks || !repo.fork;
+      const matchesPrivate =
+        !repo.private || isOverriddenPrivateRepo(repo) || showPrivate;
+      return matchesFork && matchesPrivate;
+    }),
+  );
+
+  // Available languages updates based on filtered projects
   const availableLanguages = $derived(
-    [
-      ...new Set(forkFilteredProjects.flatMap((repo) => repo.languageNames)),
-    ].sort((a, b) => a.localeCompare(b)),
+    [...new Set(filteredProjects.flatMap((repo) => repo.languageNames))].sort(
+      (a, b) => a.localeCompare(b),
+    ),
   );
 
   $effect(() => {
@@ -48,8 +74,26 @@
     }
   });
 
+  // Sort projects
+  const sortedProjects = $derived(
+    [...filteredProjects].sort((a, b) => {
+      if (sortBy === 'stars') {
+        return b.stargazers_count - a.stargazers_count;
+      }
+      if (sortBy === 'forks') {
+        return b.forks_count - a.forks_count;
+      }
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      }
+      // default: updated (pushed_at)
+      return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
+    }),
+  );
+
+  // Filter by language
   const visibleProjects = $derived(
-    forkFilteredProjects.filter((repo) => {
+    sortedProjects.filter((repo) => {
       if (activeLanguage === 'all') return true;
       return repo.languageNames.some(
         (lang) => normalize(lang) === normalize(activeLanguage),
@@ -66,62 +110,28 @@
   {/if}
 </p>
 
-<section aria-labelledby="language-filters" class="filters">
-  <div class="controls">
-    <button
-      class="fork-toggle"
-      type="button"
-      onclick={() => (showForks = !showForks)}
-      aria-pressed={showForks}
-    >
-      {showForks ? 'Hide forks' : 'Show forks'}
-    </button>
-  </div>
+<div class="projects-layout">
+  <ProjectsSidebar
+    bind:showForks
+    bind:showPrivate
+    bind:activeLanguage
+    bind:sortBy
+    {availableLanguages}
+  />
 
-  <div class="section-heading">
-    <h2 id="language-filters">Filter by language</h2>
-    <p>
-      By default, forks are hidden. Turning them on also adds fork-only
-      languages to the filter list.
-    </p>
-  </div>
+  <section aria-labelledby="projects" class="projects-section">
+    <div class="section-heading">
+      <h2 id="projects">Repositories</h2>
+      <p>Cards stay readable even without JavaScript enabled.</p>
+    </div>
 
-  <div class="filter-row">
-    <button
-      class="filter-button"
-      class:active={activeLanguage === 'all'}
-      type="button"
-      onclick={() => (activeLanguage = 'all')}
-      aria-pressed={activeLanguage === 'all'}
-    >
-      All
-    </button>
-    {#each availableLanguages as language}
-      <button
-        class="filter-button"
-        class:active={normalize(language) === normalize(activeLanguage)}
-        type="button"
-        onclick={() => (activeLanguage = language)}
-        aria-pressed={normalize(language) === normalize(activeLanguage)}
-      >
-        {language}
-      </button>
-    {/each}
-  </div>
-</section>
-
-<section aria-labelledby="projects" class="projects">
-  <div class="section-heading">
-    <h2 id="projects">Repositories</h2>
-    <p>Cards stay readable even without JavaScript enabled.</p>
-  </div>
-
-  <div class="grid">
-    {#each visibleProjects as repo, i (i)}
-      <RepoCard {repo} />
-    {/each}
-  </div>
-</section>
+    <div class="grid">
+      {#each visibleProjects as repo (repo.id)}
+        <RepoCard {repo} />
+      {/each}
+    </div>
+  </section>
+</div>
 
 <style>
   .stats {
@@ -130,19 +140,28 @@
     margin-bottom: 0;
   }
 
-  .filters,
-  .projects {
-    margin-top: 2.25rem;
+  .projects-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 2rem;
+  }
+
+  .projects-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .section-heading {
     display: grid;
     gap: 0.35rem;
-    margin-bottom: 1rem;
   }
 
   .section-heading h2 {
     font-size: 1.45rem;
+    margin: 0;
   }
 
   .section-heading p {
@@ -150,55 +169,16 @@
     color: rgb(var(--gray));
   }
 
-  .controls {
-    margin-bottom: 1rem;
-  }
-
-  .fork-toggle,
-  .filter-button {
-    appearance: none;
-    border: 1px solid rgb(var(--gray-light));
-    background: rgba(255, 255, 255, 0.85);
-    color: rgb(var(--gray-dark));
-    border-radius: 999px;
-    padding: 0.55rem 0.95rem;
-    font: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease,
-      border-color 0.15s ease,
-      background-color 0.15s ease;
-  }
-
-  .filter-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .fork-toggle:hover,
-  .fork-toggle:focus-visible,
-  .filter-button:hover,
-  .filter-button:focus-visible {
-    transform: translateY(-1px);
-    box-shadow: var(--box-shadow);
-    border-color: rgba(var(--gray), 0.35);
-    outline: none;
-  }
-
-  .fork-toggle[aria-pressed='true'],
-  .filter-button.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    .projects-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
   }
 </style>
