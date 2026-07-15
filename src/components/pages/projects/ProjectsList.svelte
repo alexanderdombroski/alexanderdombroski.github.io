@@ -2,6 +2,7 @@
   import RepoCard from './RepoCard.svelte';
   import ProjectsSidebar from './ProjectsSidebar.svelte';
   import { overrides } from '../../../assets/data/overrides';
+  import Masonry from '../../base/Masonry.svelte';
 
   interface Project {
     id: number;
@@ -125,11 +126,15 @@
       <p>Cards stay readable even without JavaScript enabled.</p>
     </div>
 
-    <div class="grid">
+    <Masonry
+      gridGap="1.2rem"
+      colWidth="minmax(280px, 1fr)"
+      items={visibleProjects}
+    >
       {#each visibleProjects as repo (repo.id)}
         <RepoCard {repo} />
       {/each}
-    </div>
+    </Masonry>
   </section>
 </div>
 
@@ -167,12 +172,6 @@
   .section-heading p {
     margin: 0;
     color: rgb(var(--gray));
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.2rem;
   }
 
   @media (max-width: 768px) {

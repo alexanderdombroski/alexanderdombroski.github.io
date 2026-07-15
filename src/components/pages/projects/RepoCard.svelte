@@ -269,6 +269,7 @@
       border-color 0.18s ease;
     container-type: inline-size;
     container-name: repo-card;
+    width: 100%;
   }
 
   .card-link:hover .card,
@@ -352,6 +353,7 @@
     color: rgb(var(--gray-dark));
     font-size: 0.82rem;
     font-weight: 600;
+    height: 2rem;
   }
 
   .language-percent {
