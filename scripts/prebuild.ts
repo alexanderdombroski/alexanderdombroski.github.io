@@ -320,13 +320,14 @@ async function fetchContributorsData(octokit: Octokit, repos: any[]) {
 // ── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
+  const fresh = process.argv.includes('--fresh');
   const octokit = new Octokit({ auth: GITHUB_TOKEN });
   const raw = await readFile(CACHE_PATH, 'utf-8').catch(() => '{}');
   const cache = JSON.parse(raw) as CacheManifest;
   const now = new Date().toISOString();
   let updated = false;
 
-  if (isStale(cache, 'opensource.json')) {
+  if (fresh || isStale(cache, 'opensource.json')) {
     await fetchOpensourceData(octokit);
     cache['opensource.json'] = now;
     updated = true;
@@ -335,7 +336,7 @@ async function main() {
   }
 
   let repos: any[] = [];
-  if (isStale(cache, 'projects.json')) {
+  if (fresh || isStale(cache, 'projects.json')) {
     repos = await fetchProjectsData(octokit);
     cache['projects.json'] = now;
     updated = true;
@@ -350,7 +351,7 @@ async function main() {
     }
   }
 
-  if (isStale(cache, 'contributors.json')) {
+  if (fresh || isStale(cache, 'contributors.json')) {
     await fetchContributorsData(octokit, repos);
     cache['contributors.json'] = now;
     updated = true;
