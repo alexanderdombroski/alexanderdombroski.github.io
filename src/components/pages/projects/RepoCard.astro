@@ -63,12 +63,12 @@ const isPublic = !repo.private && repo.html_url;
 
         {repo.description && <p class="description">{repo.description}</p>}
 
-        <div
-          class="language-list"
-          aria-label={`Languages used in ${repo.name}`}
-        >
-          {visibleLanguages.length > 0 ? (
-            visibleLanguages.map((language) => (
+        {visibleLanguages.length > 0 && (
+          <div
+            class="language-list"
+            aria-label={`Languages used in ${repo.name}`}
+          >
+            {visibleLanguages.map((language) => (
               <span class="language-pill">
                 {language.name}
                 {visibleLanguages.length > 1 && (
@@ -77,11 +77,9 @@ const isPublic = !repo.private && repo.html_url;
                   </span>
                 )}
               </span>
-            ))
-          ) : (
-            <span class="language-pill">Other</span>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div class="meta">
           <span
@@ -150,9 +148,12 @@ const isPublic = !repo.private && repo.html_url;
 
       {repo.description && <p class="description">{repo.description}</p>}
 
-      <div class="language-list" aria-label={`Languages used in ${repo.name}`}>
-        {visibleLanguages.length > 0 ? (
-          visibleLanguages.map((language) => (
+      {visibleLanguages.length > 0 && (
+        <div
+          class="language-list"
+          aria-label={`Languages used in ${repo.name}`}
+        >
+          {visibleLanguages.map((language) => (
             <span class="language-pill">
               {language.name}
               {visibleLanguages.length > 1 && (
@@ -161,11 +162,9 @@ const isPublic = !repo.private && repo.html_url;
                 </span>
               )}
             </span>
-          ))
-        ) : (
-          <span class="language-pill">Other</span>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div class="meta">
         <span
@@ -229,17 +228,17 @@ const isPublic = !repo.private && repo.html_url;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 12px 30px rgba(var(--gray), 0.1);
-  }
-
-  .card-link:hover .card,
-  .card-link:focus-within .card {
-    transform: translateY(-4px);
-    box-shadow: var(--box-shadow);
-    border-color: rgba(var(--gray), 0.32);
     transition:
       transform 0.18s ease,
       box-shadow 0.18s ease,
       border-color 0.18s ease;
+  }
+
+  .card-link:hover .card,
+  .card-link:focus-within .card {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(var(--gray), 0.08);
+    border-color: rgba(var(--gray), 0.24);
   }
 
   .card[hidden] {
