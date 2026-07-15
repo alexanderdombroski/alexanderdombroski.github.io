@@ -75,7 +75,9 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
   return {
     id: repo.id,
     name: shouldCensor ? 'Private Repository' : repo.name,
-    fullname: repo.full_name,
+    fullname: shouldCensor
+      ? `${repo.owner.login}/private-repo`
+      : repo.full_name,
     private: repo.private,
     owner: {
       login: repo.owner.login,
