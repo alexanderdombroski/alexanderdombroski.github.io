@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import rawProjects from './projects.json';
+import rawProjects from './projects.json' with { type: 'json' };
 
 export interface ProjectOverride {
   owner: string;
@@ -84,12 +84,11 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
       o.repo.toLowerCase() === repo.name.toLowerCase(),
   );
 
-  const isPrivate = repo.private;
-  const shouldCensor = isPrivate && !isOverridden;
+  const shouldCensor = repo.private && !isOverridden;
 
   return {
     id: repo.id,
-    name: shouldCensor ? 'private repo' : repo.name,
+    name: shouldCensor ? 'Private Repository' : repo.name,
     fullname: repo.full_name,
     private: repo.private,
     owner: {
@@ -109,7 +108,7 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
     archived: repo.archived,
     open_issues_count: repo.open_issues_count,
     is_template: repo.is_template,
-    languageEntries: repo.languageEntries,
+    languageEntries: shouldCensor ? [] : repo.languageEntries,
   };
 });
 

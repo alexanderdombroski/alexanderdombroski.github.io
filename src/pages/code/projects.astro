@@ -2,13 +2,12 @@
 import CodeLayout from '../../layouts/CodeLayout.astro';
 import rawProjects from '../../assets/data/projects';
 import RepoCard from '../../components/pages/projects/RepoCard.astro';
+import contributorsData from '../../assets/data/contributors.json';
 
-let contributors: Record<string, any> = {};
-try {
-  contributors = (await import('../../assets/data/contributors.json')).default;
-} catch {
-  // Fallback if contributors.json does not exist
-}
+const contributors: Record<
+  string,
+  (typeof contributorsData)[keyof typeof contributorsData]
+> = contributorsData;
 
 const projects = rawProjects.map((repo) => {
   const repoContributors = contributors[repo.name];

@@ -7,6 +7,7 @@ interface Props {
     fullname: string;
     fork: boolean;
     archived: boolean;
+    private: boolean;
     description: string | null;
     languageEntries: { name: string; bytes: number }[];
     stargazers_count: number;
@@ -44,14 +45,13 @@ const formatDate = (value: string) =>
       <p class="repo-full-name">{repo.fullname}</p>
     </div>
     <div class="badges">
+      {repo.private && <span class="badge private">Private</span>}
       {repo.fork && <span class="badge muted">Fork</span>}
       {repo.archived && <span class="badge muted">Archived</span>}
     </div>
   </div>
 
-  <p class="description">
-    {repo.description ?? 'No description provided.'}
-  </p>
+  {repo.description && <p class="description">{repo.description}</p>}
 
   <div class="language-list" aria-label={`Languages used in ${repo.name}`}>
     {
@@ -115,14 +115,18 @@ const formatDate = (value: string) =>
     <span>Updated {formatDate(repo.pushed_at)}</span>
   </div>
 
-  <a
-    class="repo-link"
-    href={repo.html_url}
-    target="_blank"
-    rel="noreferrer noopener"
-  >
-    Open repository
-  </a>
+  {
+    repo.html_url && (
+      <a
+        class="repo-link"
+        href={repo.html_url}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        Open repository
+      </a>
+    )
+  }
 </article>
 
 <style>
@@ -189,6 +193,11 @@ const formatDate = (value: string) =>
 
   .badge.muted {
     background: rgba(var(--gray-light), 0.85);
+  }
+
+  .badge.private {
+    background: rgba(139, 92, 246, 0.15);
+    color: rgb(109, 40, 217);
   }
 
   .description {

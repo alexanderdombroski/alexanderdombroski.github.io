@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { Octokit } from 'octokit';
 import { issues, prs, type Contribution } from '../src/assets/data/opensource';
+import { overrides } from '../src/assets/data/projects';
 import { loadEnvFile } from 'node:process';
 
 type CacheManifest = Record<string, string>; // key → ISO timestamp
@@ -70,12 +71,12 @@ async function fetchOpensourceData(octokit: Octokit) {
 async function fetchProjectsData(octokit: Octokit) {
   console.info('[prebuild] Fetching project repository data…');
 
-  const repos = await octokit.paginate('GET /users/{username}/repos', {
-    username: GITHUB_OWNER,
+  const repos = await octokit.paginate('GET /user/repos', {
     per_page: 100,
     sort: 'updated',
     direction: 'desc',
-    type: 'owner',
+    affiliation: 'owner',
+    visibility: 'all',
   });
 
   const repoData = await Promise.all(
@@ -174,7 +175,19 @@ async function fetchContributorsData(octokit: Octokit, repos: any[]) {
         delete contributorsData[repo.name];
       }
 
-      if (isNotPushedIn6Months && contributorCount <= 2) {
+      const isPrivateNonOverride =
+        repo.private &&
+        !overrides.some(
+          (o) =>
+            o.owner.toLowerCase() === GITHUB_OWNER.toLowerCase() &&
+            o.repo.toLowerCase() === repo.name.toLowerCase(),
+        );
+
+      if (
+        isNotPushedIn6Months &&
+        contributorCount <= 2 &&
+        !isPrivateNonOverride
+      ) {
         if (!contributorsNoContributorsCache.includes(repo.name)) {
           contributorsNoContributorsCache.push(repo.name);
         }
