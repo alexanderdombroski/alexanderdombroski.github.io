@@ -90,6 +90,7 @@ export default defineConfig([
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 2017,
+      globals: { ...globals.browser, ...globals.node },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,

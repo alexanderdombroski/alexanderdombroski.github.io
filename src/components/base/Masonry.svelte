@@ -11,7 +11,7 @@
     children: Snippet;
   }
 
-  let {
+  const {
     stretchFirst = false,
     gridGap = '0.5em',
     colWidth = 'minmax(Min(20rem, 100%), 1fr)',
@@ -112,7 +112,7 @@
 
 <div
   bind:this={masonryElement}
-  class={'__grid--masonry'}
+  class="__grid--masonry"
   class:__stretch-first={stretchFirst}
   style:--grid-gap={gridGap}
   style:--col-width={colWidth}

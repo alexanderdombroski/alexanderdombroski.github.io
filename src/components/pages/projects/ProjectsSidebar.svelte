@@ -12,6 +12,7 @@
     showPrivate = $bindable(false),
     activeLanguage = $bindable('all'),
     sortBy = $bindable('updated'),
+    // eslint-disable-next-line -- prefer-const
     availableLanguages,
   }: Props = $props();
 
@@ -110,7 +111,7 @@
         >
           All Languages
         </button>
-        {#each availableLanguages as language}
+        {#each availableLanguages as language (language)}
           <button
             class="filter-button"
             class:active={normalize(language) === normalize(activeLanguage)}

@@ -22,7 +22,7 @@
     };
   }
 
-  let { repo }: Props = $props();
+  const { repo }: Props = $props();
 
   const totalBytes = $derived(
     repo.languageEntries.reduce((sum, l) => sum + l.bytes, 0),
@@ -158,7 +158,7 @@
 
     {#if visibleLanguages.length > 0}
       <div class="language-list" aria-label={`Languages used in ${repo.name}`}>
-        {#each visibleLanguages as language}
+        {#each visibleLanguages as language (language.name)}
           <span class="language-pill">
             {language.name}
             {#if visibleLanguages.length > 1}

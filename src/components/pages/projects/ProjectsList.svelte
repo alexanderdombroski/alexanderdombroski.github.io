@@ -31,7 +31,7 @@
     projects: Project[];
   }
 
-  let { projects }: Props = $props();
+  const { projects }: Props = $props();
 
   let showForks = $state(false);
   let showPrivate = $state(false);
