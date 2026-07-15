@@ -3,7 +3,7 @@ import path from 'node:path';
 import { Octokit } from 'octokit';
 import pLimit from 'p-limit';
 import { issues, prs, type Contribution } from '../src/assets/data/opensource';
-import { overrides } from '../src/assets/data/overrides';
+import { overrides, additionalProjects } from '../src/assets/data/overrides';
 import { loadEnvFile } from 'node:process';
 
 type CacheManifest = Record<string, string>; // key → ISO timestamp
@@ -23,7 +23,6 @@ const CACHE_PATH = path.join(DATA_DIR, 'cache.json');
 const PROJECTS_PATH = path.join(DATA_DIR, 'projects.json');
 const OPENSOURCE_PATH = path.join(DATA_DIR, 'opensource.json');
 
-const GITHUB_OWNER = 'alexanderdombroski';
 const STALE_DAYS = 5;
 const STALE_MS = STALE_DAYS * 24 * 60 * 60 * 1000;
 
@@ -72,13 +71,33 @@ async function fetchOpensourceData(octokit: Octokit) {
 async function fetchProjectsData(octokit: Octokit) {
   console.info('[prebuild] Fetching project repository data…');
 
-  const repos = await octokit.paginate('GET /user/repos', {
+  const repos: any[] = await octokit.paginate('GET /user/repos', {
     per_page: 100,
     sort: 'updated',
     direction: 'desc',
     affiliation: 'owner',
     visibility: 'all',
   });
+
+  for (const proj of additionalProjects) {
+    try {
+      console.info(
+        `[prebuild] Fetching additional repository ${proj.owner}/${proj.repo}…`,
+      );
+      const { data: additionalRepo } = await octokit.request(
+        'GET /repos/{owner}/{repo}',
+        { owner: proj.owner, repo: proj.repo },
+      );
+      if (!repos.some((r) => r.id === additionalRepo.id)) {
+        repos.push(additionalRepo);
+      }
+    } catch (err) {
+      console.warn(
+        `[prebuild] Failed to fetch additional repository ${proj.owner}/${proj.repo}:`,
+        err,
+      );
+    }
+  }
 
   const limit = pLimit(10);
 
@@ -87,7 +106,7 @@ async function fetchProjectsData(octokit: Octokit) {
       limit(async () => {
         const { data: languages } = await octokit.request(
           'GET /repos/{owner}/{repo}/languages',
-          { owner: GITHUB_OWNER, repo: repo.name },
+          { owner: repo.owner.login, repo: repo.name },
         );
 
         const languageEntries = Object.entries(languages)
@@ -161,7 +180,7 @@ async function fetchContributorsData(octokit: Octokit, repos: any[]) {
     try {
       const { data: contributors } = await octokit.request(
         'GET /repos/{owner}/{repo}/contributors',
-        { owner: GITHUB_OWNER, repo: repo.name },
+        { owner: repo.owner.login, repo: repo.name },
       );
 
       const contributorCount = Array.isArray(contributors)
@@ -184,7 +203,7 @@ async function fetchContributorsData(octokit: Octokit, repos: any[]) {
         repo.private &&
         !overrides.some(
           (o) =>
-            o.owner.toLowerCase() === GITHUB_OWNER.toLowerCase() &&
+            o.owner.toLowerCase() === repo.owner.login.toLowerCase() &&
             o.repo.toLowerCase() === repo.name.toLowerCase(),
         );
 
