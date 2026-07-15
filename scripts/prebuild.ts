@@ -25,6 +25,9 @@ const GITHUB_OWNER = 'alexanderdombroski';
 const STALE_DAYS = 5;
 const STALE_MS = STALE_DAYS * 24 * 60 * 60 * 1000;
 
+const CONTRIBUTORS_PATH = path.join(DATA_DIR, 'contributors.json');
+const CONTRIBUTORS_CACHE_PATH = path.join(DATA_DIR, 'contributors-cache.json');
+
 function isStale(manifest: CacheManifest, key: string): boolean {
   const ts = manifest[key];
   if (!ts) return true;
@@ -98,6 +101,103 @@ async function fetchProjectsData(octokit: Octokit) {
 
   await writeFile(PROJECTS_PATH, JSON.stringify(repoData, null, 2));
   console.info('[prebuild] Wrote projects.json');
+  return repoData;
+}
+
+async function fetchContributorsData(octokit: Octokit, repos: any[]) {
+  console.info('[prebuild] Fetching contributors data…');
+
+  let contributorsData: Record<string, any> = {};
+  try {
+    contributorsData = JSON.parse(await readFile(CONTRIBUTORS_PATH, 'utf-8'));
+  } catch {
+    contributorsData = {};
+  }
+
+  let contributorsNoContributorsCache: string[] = [];
+  try {
+    contributorsNoContributorsCache = JSON.parse(
+      await readFile(CONTRIBUTORS_CACHE_PATH, 'utf-8'),
+    );
+  } catch {
+    contributorsNoContributorsCache = [];
+  }
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  for (const repo of repos) {
+    if (repo.fork) {
+      console.info(
+        `[prebuild] Skipping contributors fetch for ${repo.name} (is a fork)`,
+      );
+      delete contributorsData[repo.name];
+      contributorsNoContributorsCache = contributorsNoContributorsCache.filter(
+        (name) => name !== repo.name,
+      );
+      continue;
+    }
+
+    const pushedTime = new Date(repo.pushed_at);
+    const isNotPushedIn6Months = pushedTime < sixMonthsAgo;
+    const hadNoContributorsInPast = contributorsNoContributorsCache.includes(
+      repo.name,
+    );
+
+    if (isNotPushedIn6Months && hadNoContributorsInPast) {
+      console.info(
+        `[prebuild] Skipping contributors fetch for ${repo.name} (not pushed in 6 months and no past contributors)`,
+      );
+      continue;
+    }
+
+    console.info(`[prebuild] Fetching contributors for ${repo.name}…`);
+    try {
+      const { data: contributors } = await octokit.request(
+        'GET /repos/{owner}/{repo}/contributors',
+        { owner: GITHUB_OWNER, repo: repo.name },
+      );
+
+      const contributorCount = Array.isArray(contributors)
+        ? contributors.length
+        : 0;
+
+      if (contributorCount > 1) {
+        contributorsData[repo.name] = contributors.map((c: any) => ({
+          login: c.login,
+          id: c.id,
+          avatar_url: c.avatar_url,
+          html_url: c.html_url,
+          contributions: c.contributions,
+        }));
+      } else {
+        delete contributorsData[repo.name];
+      }
+
+      if (isNotPushedIn6Months && contributorCount <= 2) {
+        if (!contributorsNoContributorsCache.includes(repo.name)) {
+          contributorsNoContributorsCache.push(repo.name);
+        }
+      } else {
+        contributorsNoContributorsCache =
+          contributorsNoContributorsCache.filter((name) => name !== repo.name);
+      }
+    } catch (error) {
+      console.warn(
+        `[prebuild] Failed to fetch contributors for ${repo.name}:`,
+        error,
+      );
+    }
+  }
+
+  await writeFile(CONTRIBUTORS_PATH, JSON.stringify(contributorsData, null, 2));
+  await writeFile(
+    CONTRIBUTORS_CACHE_PATH,
+    JSON.stringify(contributorsNoContributorsCache, null, 2),
+  );
+  console.info(
+    '[prebuild] Wrote contributors.json and contributors-cache.json',
+  );
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
@@ -117,12 +217,28 @@ async function main() {
     console.info('[prebuild] opensource.json is fresh — skipping fetch.');
   }
 
+  let repos: any[] = [];
   if (isStale(cache, 'projects.json')) {
-    await fetchProjectsData(octokit);
+    repos = await fetchProjectsData(octokit);
     cache['projects.json'] = now;
     updated = true;
   } else {
     console.info('[prebuild] projects.json is fresh — skipping fetch.');
+    try {
+      repos = JSON.parse(await readFile(PROJECTS_PATH, 'utf-8'));
+    } catch {
+      repos = await fetchProjectsData(octokit);
+      cache['projects.json'] = now;
+      updated = true;
+    }
+  }
+
+  if (isStale(cache, 'contributors.json')) {
+    await fetchContributorsData(octokit, repos);
+    cache['contributors.json'] = now;
+    updated = true;
+  } else {
+    console.info('[prebuild] contributors.json is fresh — skipping fetch.');
   }
 
   if (updated) {
