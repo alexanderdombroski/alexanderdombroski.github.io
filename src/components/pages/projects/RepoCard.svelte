@@ -467,11 +467,6 @@
     min-width: 0;
   }
 
-  .updated-date {
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-
   .date-range {
     margin: 0;
     font-size: 0.78rem;
