@@ -44,12 +44,7 @@
     target="_blank"
     rel="noreferrer noopener"
   >
-    <article
-      class="card"
-      data-repo-card
-      data-repo-full-name={repo.fullname}
-      data-is-fork={String(repo.fork)}
-    >
+    <article class="card">
       <div class="card-top">
         <div class="repo-name-row">
           <p class="repo-name">{repo.name}</p>
@@ -153,12 +148,7 @@
     </article>
   </a>
 {:else}
-  <article
-    class="card"
-    data-repo-card
-    data-repo-full-name={repo.fullname}
-    data-is-fork={String(repo.fork)}
-  >
+  <article class="card">
     <div class="card-top">
       <div class="repo-name-row">
         <p class="repo-name">{repo.name}</p>
