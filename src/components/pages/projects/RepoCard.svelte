@@ -283,6 +283,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0;
   }
 
   .repo-name-row {
@@ -304,6 +305,9 @@
     margin: 0;
     color: rgb(var(--gray));
     font-size: 0.9rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .badges {
