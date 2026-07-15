@@ -99,18 +99,29 @@ async function fetchProjectsData(octokit: Octokit) {
     }
   }
 
-  const limit = pLimit(10);
+  const limit = pLimit(5);
+
+  /** Parse the total page count from a GitHub Link header, return null if absent. */
+  function parseTotalPages(linkHeader: string | undefined): number | null {
+    if (!linkHeader) return null;
+    const match = linkHeader.match(/[?&]page=(\d+)>; rel="last"/);
+    return match ? parseInt(match[1], 10) : null;
+  }
 
   const repoData = await Promise.all(
     repos.map((repo) =>
       limit(async () => {
+        const owner = repo.owner.login as string;
+        const name = repo.name as string;
+
+        // ── Languages ────────────────────────────────────────────────────
         const { data: languages } = await octokit.request(
           'GET /repos/{owner}/{repo}/languages',
-          { owner: repo.owner.login, repo: repo.name },
+          { owner, repo: name },
         );
 
         const languageEntries = Object.entries(languages)
-          .map(([name, bytes]) => ({ name, bytes: bytes as number }))
+          .map(([lang, bytes]) => ({ name: lang, bytes: bytes as number }))
           .sort((a, b) => b.bytes - a.bytes);
 
         const languageNames = languageEntries.length
@@ -119,7 +130,60 @@ async function fetchProjectsData(octokit: Octokit) {
             ? [repo.language]
             : ['Other'];
 
-        return { ...repo, languageEntries, languageNames };
+        // ── Last commit date + total commit count ────────────────────────
+        // Fetch just the first page (1 item) — the Link header tells us total pages.
+        let lastCommitDate: string | null = null;
+        let totalCommits: number | null = null;
+        try {
+          const commitsResp = await octokit.request(
+            'GET /repos/{owner}/{repo}/commits',
+            { owner, repo: name, per_page: 1 },
+          );
+          // Most-recent commit date
+          lastCommitDate =
+            commitsResp.data[0]?.commit?.committer?.date ??
+            commitsResp.data[0]?.commit?.author?.date ??
+            null;
+          // Total commit count from pagination Link header
+          const linkHeader = (commitsResp.headers as Record<string, string>)[
+            'link'
+          ];
+          const totalPages = parseTotalPages(linkHeader);
+          totalCommits = totalPages ?? (commitsResp.data.length > 0 ? 1 : 0);
+        } catch (err) {
+          console.warn(`[prebuild] Could not fetch commits for ${name}:`, err);
+        }
+
+        // ── Total PR count (open + closed) ───────────────────────────────
+        let totalPRs: number | null = null;
+        try {
+          const [openPRs, closedPRs] = await Promise.all([
+            octokit.paginate('GET /repos/{owner}/{repo}/pulls', {
+              owner,
+              repo: name,
+              state: 'open',
+              per_page: 100,
+            }),
+            octokit.paginate('GET /repos/{owner}/{repo}/pulls', {
+              owner,
+              repo: name,
+              state: 'closed',
+              per_page: 100,
+            }),
+          ]);
+          totalPRs = openPRs.length + closedPRs.length;
+        } catch (err) {
+          console.warn(`[prebuild] Could not fetch PRs for ${name}:`, err);
+        }
+
+        return {
+          ...repo,
+          languageEntries,
+          languageNames,
+          lastCommitDate,
+          totalCommits,
+          totalPRs,
+        };
       }),
     ),
   );
