@@ -115,9 +115,9 @@ const projects: FilteredProject[] = parsedProjects.map((repo) => {
     is_template: repo.is_template,
     languageEntries: repo.languageEntries,
     langFilterList,
-    lastCommitDate: shouldCensor ? null : repo.lastCommitDate,
-    firstCommitDate: shouldCensor ? null : repo.firstCommitDate,
-    totalCommits: shouldCensor ? null : repo.totalCommits,
+    lastCommitDate: repo.lastCommitDate,
+    firstCommitDate: repo.firstCommitDate,
+    totalCommits: repo.totalCommits,
     totalPRs: shouldCensor ? null : repo.totalPRs,
   };
 });
