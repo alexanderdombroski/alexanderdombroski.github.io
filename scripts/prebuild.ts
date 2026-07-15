@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { Octokit } from 'octokit';
+import pLimit from 'p-limit';
 import { issues, prs, type Contribution } from '../src/assets/data/opensource';
 import { overrides } from '../src/assets/data/overrides';
 import { loadEnvFile } from 'node:process';
@@ -79,25 +80,29 @@ async function fetchProjectsData(octokit: Octokit) {
     visibility: 'all',
   });
 
+  const limit = pLimit(10);
+
   const repoData = await Promise.all(
-    repos.map(async (repo) => {
-      const { data: languages } = await octokit.request(
-        'GET /repos/{owner}/{repo}/languages',
-        { owner: GITHUB_OWNER, repo: repo.name },
-      );
+    repos.map((repo) =>
+      limit(async () => {
+        const { data: languages } = await octokit.request(
+          'GET /repos/{owner}/{repo}/languages',
+          { owner: GITHUB_OWNER, repo: repo.name },
+        );
 
-      const languageEntries = Object.entries(languages)
-        .map(([name, bytes]) => ({ name, bytes: bytes as number }))
-        .sort((a, b) => b.bytes - a.bytes);
+        const languageEntries = Object.entries(languages)
+          .map(([name, bytes]) => ({ name, bytes: bytes as number }))
+          .sort((a, b) => b.bytes - a.bytes);
 
-      const languageNames = languageEntries.length
-        ? languageEntries.map(({ name }) => name)
-        : repo.language
-          ? [repo.language]
-          : ['Other'];
+        const languageNames = languageEntries.length
+          ? languageEntries.map(({ name }) => name)
+          : repo.language
+            ? [repo.language]
+            : ['Other'];
 
-      return { ...repo, languageEntries, languageNames };
-    }),
+        return { ...repo, languageEntries, languageNames };
+      }),
+    ),
   );
 
   await writeFile(PROJECTS_PATH, JSON.stringify(repoData, null, 2));
