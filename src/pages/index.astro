@@ -5,12 +5,15 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 <RootLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <div class="intro">
-    <div>
+    <div class="intro-text">
       <h1>Hi, I'm Alex Dombroski</h1>
       <p>
-        I'll add some cool projects to this site later, but for now, checkout my <a
-          href="https://github.com/alexanderdombroski">Github</a
-        >
+        I like to solve problems with code. Take a look around at my projects or
+        check out my <a
+          href="https://github.com/alexanderdombroski"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >.
       </p>
     </div>
     <figure>
@@ -22,24 +25,48 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 <style>
   .intro {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column-reverse;
+    justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 2rem;
+    text-align: center;
   }
+
+  .intro-text {
+    max-width: 600px;
+  }
+
   figure {
     margin: 0;
-    /* border-radius: 50%; */
     overflow: hidden;
-    max-width: 400px;
-    max-height: 400px;
-    box-shadow: 3px 3px 10px;
+    max-width: 100%;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     display: flex;
     justify-content: center;
+    align-items: center;
   }
+
   img {
-    /* transform: translate(-50%); */
-    max-width: none;
-    height: unset;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 768px) {
+    .intro {
+      flex-direction: row;
+      justify-content: space-evenly;
+      text-align: left;
+      gap: 2rem;
+    }
+
+    figure {
+      width: 340px;
+      height: 340px;
+      flex-shrink: 0;
+    }
   }
 </style>
