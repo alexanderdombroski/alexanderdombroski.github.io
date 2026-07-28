@@ -124,7 +124,7 @@
   className: string,
   count: number,
   label: string,
-  icon: import('svelte').Snippet,
+  icon: () => ReturnType<import('svelte').Snippet>,
 )}
   <span class={className} title={pluralify(label, count)}>
     {@render icon()}
