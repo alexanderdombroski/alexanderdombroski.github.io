@@ -1,0 +1,25 @@
+{
+  "$schema": "https://www.schemastore.org/web-manifest.json",
+  "name": "Alex Dombroski",
+  "short_name": "Alex",
+  "description": "Alex Dombroski is a Software Engineer who loves to solve problems with code. Learn more about what he does on this site!",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/images/favicons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/favicons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "browser"
+}

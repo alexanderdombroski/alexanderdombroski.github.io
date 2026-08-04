@@ -21,8 +21,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
   rel="alternate"
@@ -32,6 +30,24 @@ const { title, description, image = FallbackImage } = Astro.props;
 />
 <meta name="generator" content={Astro.generator} />
 
+<!-- Favicons -->
+<link
+  rel="icon"
+  type="image/png"
+  href="/images/favicons/favicon-96x96.png"
+  sizes="96x96"
+/>
+<link rel="icon" type="image/svg+xml" href="/images/favicons/favicon.svg" />
+<link rel="shortcut icon" href="/images/favicons/favicon.ico" />
+<link
+  rel="apple-touch-icon"
+  sizes="180x180"
+  href="/images/favicons/apple-touch-icon.png"
+/>
+<meta name="apple-mobile-web-app-title" content="Alex" />
+<link rel="manifest" href="/images/favicons/site.webmanifest" />
+
+<!-- Fonts -->
 <Font cssVariable="--heading-font" preload />
 <Font cssVariable="--paragraph-font" preload />
 <Font cssVariable="--logo-font" />
