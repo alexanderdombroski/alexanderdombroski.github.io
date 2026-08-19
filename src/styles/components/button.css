@@ -39,7 +39,7 @@
 
     &:not(:disabled) {
       &:hover,
-      &:focus {
+      &:focus-visible {
         opacity: 0.9;
         transform: scale(1.04);
         background-color: color-mix(
@@ -78,7 +78,7 @@
 
   &:not(:disabled) {
     &:hover,
-    &:focus {
+    &:focus-visible {
       opacity: 0.9;
       background-color: color-mix(
         in srgb,
